@@ -1,11 +1,12 @@
 #include <iostream>
 #include <algorithm>
 
+#define int long long
+#define REP(i,n) for(int i=0, i##_len=(n); i<i##_len; ++i)
+
 using namespace std;
 
-typedef long long ll;
-
-int main()
+signed main()
 {
 
     return 0;
