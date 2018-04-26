@@ -6,7 +6,7 @@
 #define REP(i,n) for(int i=0, i##_len=(n); i<i##_len; ++i)
 #define REPS(i,n) for(int i=1, i##_len=(n); i<=i##_len; ++i)
 
-#define INF (3e9)
+#define INF (3e15)
 
 using namespace std;
 
