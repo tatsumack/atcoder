@@ -27,7 +27,7 @@
 #define FOR(i, a, b) for (int i = (a), i##_len = (b); i < i##_len; ++i)
 #define REV(i, a) for (int i = (a); i >= 0; --i)
 #define CLR(a) memset((a), 0, sizeof(a))
-#define DUMP(x) cerr << #x << " = " << (x) << endl;
+#define DUMP(x) cout << #x << " = " << (x) << endl;
 #define INF (3e15)
 
 using namespace std;
