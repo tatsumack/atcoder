@@ -32,4 +32,8 @@
 
 using namespace std;
 
-signed main() { return 0; }
+signed main() {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    return 0; }
