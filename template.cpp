@@ -26,7 +26,7 @@
 #define REPS(i, n) for (int i = 1, i##_len = (n); i <= i##_len; ++i)
 #define FOR(i, a, b) for (int i = (a), i##_len = (b); i <= i##_len; ++i)
 #define REV(i, a, b) for (int i = (a); i >= (b); --i)
-#define CLR(a) memset((a), 0, sizeof(a))
+#define CLR(a, b) memset((a), (b), sizeof(a))
 #define DUMP(x) cout << #x << " = " << (x) << endl;
 #define INF (3e15)
 
@@ -36,4 +36,5 @@ signed main() {
     ios::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
-    return 0; }
+    return 0;
+}
