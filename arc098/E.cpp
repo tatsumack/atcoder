@@ -47,18 +47,18 @@ signed main() {
     REP(mini, N) {
         vector<int> v[N + 1];
         int vi = 0;
-        REP(i, N) {
-            if (A[i] < A[mini]) {
+        REP(i, N + 1) {
+            if (i == N || A[i] < A[mini]) {
                 vi++;
                 continue;
             }
             v[vi].push_back(A[i]);
         }
         vector<int> sv;
-        REP(i, vi + 1) {
-            if (v[i].size() < K + Q - 1) continue;
+        REP(i, vi) {
+            if (v[i].size() < K) continue;
             sort(v[i].begin(), v[i].end());
-            REP(j, Q) { sv.push_back(v[i][j]); }
+            REP(j, v[i].size() - K + 1) { sv.push_back(v[i][j]); }
         }
         if (sv.size() < Q) continue;
         sort(sv.begin(), sv.end());
