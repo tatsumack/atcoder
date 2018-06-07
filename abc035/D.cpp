@@ -48,10 +48,10 @@ int d[100005];
 int r[100005];
 
 typedef pair<int, int> P;
-void dijkstra(int s, vector<edge> E[], int a[])
+void dijkstra(int s, int n, vector<edge> E[], int a[])
 {
     priority_queue<P, vector<P>, greater<P> > que;
-    REP(i, M + 1)
+    REP(i, n+1)
     a[i] = INF;
     a[s] = 0;
     que.push(P(0, s));
@@ -69,7 +69,7 @@ void dijkstra(int s, vector<edge> E[], int a[])
             if (a[e.to] > a[v] + e.cost)
             {
                 a[e.to] = a[v] + e.cost;
-                que.push(P(at[e.to], e.to));
+                que.push(P(a[e.to], e.to));
             }
         }
     }
@@ -94,14 +94,13 @@ signed main()
         R[b].push_back(edge(a, c));
     }
 
-    dijkstra(1, G, d);
-    dijkstra(1, R, r);
+    dijkstra(1, N, G, d);
+    dijkstra(1, N, R, r);
 
     int ans = 0;
     REPS(i, N)
     {
         if (d[i] == INF || r[i] == INF) continue;
-        if (T- d[i] - r[i] < 0) continue;
         ans = max(ans, (T - d[i] - r[i]) * A[i]);
     }
     cout << ans << endl;
