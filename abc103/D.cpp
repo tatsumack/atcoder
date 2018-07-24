@@ -44,31 +44,27 @@ signed main() {
 
     cin >> N >> M;
 
-    vector<pair<int, P> > p(M);
+    vector<P> p(M);
     REP(i, M) {
         int a, b;
         cin >> a >> b;
 
-        p[i] = {b - a, {a, b}};
+        p[i] = {b, a};
     }
     sort(p.begin(), p.end());
 
-    set<int> v;
-    v.insert(0);
-    v.insert(N);
+    int ans = 0;
+    int cur = 0;
     REP(i, M) {
-        auto kv = p[i].second;
-        int a = kv.first;
-        int b = kv.second;
-
-        auto aitr = v.lower_bound(a);
-        auto bitr = v.lower_bound(b);
-        if (aitr == bitr) {
-            v.insert(b - 1);
+        int a = p[i].second;
+        int b = p[i].first;
+        if (cur < a) {
+            ans++;
+            cur = b - 1;
         }
     }
 
-    cout << v.size() - 2 << endl;
+    cout << ans << endl;
 
     return 0;
 }
