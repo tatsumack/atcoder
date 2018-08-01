@@ -3,3 +3,6 @@
 
 *.in
 .vscode
+
+.idea
+*/cmake-build-debug/*
