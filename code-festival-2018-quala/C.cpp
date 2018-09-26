@@ -29,36 +29,60 @@
 #define REV(i, a, b) for (int i = (a); i >= (b); --i)
 #define CLR(a, b) memset((a), (b), sizeof(a))
 #define DUMP(x) cout << #x << " = " << (x) << endl;
-#define INF (LLONG_MAX - 1e5)
+#define INF 1001001001001001001ll
+#define fcout cout << fixed << setprecision(10)
 
 using namespace std;
+
+int mod = 1e9 + 7;
+
+int dp[51][6000][2];
+
+// mod
+void add(int& a, int b) {
+    a += b;
+    if (a >= mod)
+        a -= mod;
+}
 
 signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    int k;
-    cin >> k;
+    int N, K;
+    cin >> N >> K;
+    vector<int> a(N);
+    REP(i, N) cin >> a[i];
 
-    vector<int> a(k);
-    REP(i, k) cin >> a[i];
-    reverse(a.begin(), a.end());
-
-    int l, r;
-    l = r = 2;
-    REP(i, k) {
-        int val = a[i];
-        int lt = (l + val - 1) / val * val;
-        int rt = r / val * val;
-        if (lt > r || rt < l) {
-            cout << -1 << endl;
-            return 0;
+    vector<int> cnt(N, 0);
+    REP(i, N) {
+        while (a[i] > 0) {
+            a[i] /= 2;
+            cnt[i]++;
         }
-        l = lt;
-        r = rt + val - 1;
     }
-    cout << l << " " << r << endl;
+
+    dp[0][0][0] = 1;
+    REP(i, N) {
+        REP(j, 5000) {
+            FOR(k, 0, cnt[i]) {
+                if (k < cnt[i]) add(dp[i + 1][j+k][0], dp[i][j][0]);
+                add(dp[i + 1][j+k][1], dp[i][j][1]);
+            }
+            add(dp[i + 1][j+cnt[i]][1], dp[i][j][0]);
+        }
+    }
+
+    int ans = 0;
+    REP(j, 5000) {
+        if (j <= K) {
+            add(ans, dp[N][j][1]);
+        }
+        if (j == K) add(ans, dp[N][j][0]);
+    }
+
+    cout << ans << endl;
 
     return 0;
 }

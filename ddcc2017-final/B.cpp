@@ -29,36 +29,41 @@
 #define REV(i, a, b) for (int i = (a); i >= (b); --i)
 #define CLR(a, b) memset((a), (b), sizeof(a))
 #define DUMP(x) cout << #x << " = " << (x) << endl;
-#define INF (LLONG_MAX - 1e5)
+#define INF 1001001001001001001ll
+#define fcout cout << fixed << setprecision(10)
 
 using namespace std;
+
+int gcd(int a, int b) { return b ? gcd(b, a % b) : a; }
+int lcm(int a, int b) { return a * (b / gcd(a,b)); }
 
 signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    int k;
-    cin >> k;
+    int n, z;
+    cin >> n >> z;
 
-    vector<int> a(k);
-    REP(i, k) cin >> a[i];
-    reverse(a.begin(), a.end());
+    vector<int> a(n);
+    REP(i, n) cin >> a[i];
 
-    int l, r;
-    l = r = 2;
-    REP(i, k) {
-        int val = a[i];
-        int lt = (l + val - 1) / val * val;
-        int rt = r / val * val;
-        if (lt > r || rt < l) {
-            cout << -1 << endl;
-            return 0;
-        }
-        l = lt;
-        r = rt + val - 1;
+    vector<int> g(n);
+    REP(i, n)
+    {
+        g[i] = gcd(a[i], z);
     }
-    cout << l << " " << r << endl;
+    g.erase(unique(g.begin(), g.end()), g.end());
+
+    map<int, int> m;
+    int ans = 1;
+    REP(i, n)
+    {
+        ans = lcm(ans, g[i]);
+    }
+
+    cout << ans << endl;
+
 
     return 0;
 }

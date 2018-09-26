@@ -29,7 +29,8 @@
 #define REV(i, a, b) for (int i = (a); i >= (b); --i)
 #define CLR(a, b) memset((a), (b), sizeof(a))
 #define DUMP(x) cout << #x << " = " << (x) << endl;
-#define INF (LLONG_MAX - 1e5)
+#define INF 1001001001001001001ll
+#define fcout cout << fixed << setprecision(10)
 
 using namespace std;
 
@@ -38,27 +39,50 @@ signed main() {
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    int k;
-    cin >> k;
+    int L;
+    cin >> L;
 
-    vector<int> a(k);
-    REP(i, k) cin >> a[i];
-    reverse(a.begin(), a.end());
-
-    int l, r;
-    l = r = 2;
-    REP(i, k) {
-        int val = a[i];
-        int lt = (l + val - 1) / val * val;
-        int rt = r / val * val;
-        if (lt > r || rt < l) {
-            cout << -1 << endl;
-            return 0;
-        }
-        l = lt;
-        r = rt + val - 1;
+    vector<int> two;
+    int t = 1;
+    REP(i, 30) {
+        two.push_back(t);
+        t *= 2;
     }
-    cout << l << " " << r << endl;
+
+    int n = 0;
+    int bnum = 0;
+    int tmp = L;
+    while (tmp > 0) {
+        if ((tmp & 1) == 1) bnum++;
+        tmp /= 2;
+        n++;
+    }
+
+    int m = (n - 1) * 2 + bnum-1;
+
+    cout << n << " " << m << endl;
+
+    FOR(i, 1, n - 1) {
+        cout << i << " " << i + 1 << " " << 0 << endl;
+    }
+
+    FOR(i, 1, n - 1) {
+        cout << i << " " << i + 1 << " " << two[n - 2 - (i - 1)] << endl;
+    }
+
+    tmp = L;
+    int mask = 0;
+    int cnt = 0;
+    while (tmp > 0 && cnt < n-1)
+    {
+        if ((tmp & 1) == 1) {
+            mask = mask | (1 << cnt);
+            int c = L - mask;
+            cout << 1 << " " << n - cnt << " " << c << endl;
+        }
+        tmp /= 2;
+        cnt++;
+    }
 
     return 0;
 }

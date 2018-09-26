@@ -1,4 +1,3 @@
-
 #include <limits.h>
 #include <algorithm>
 #include <bitset>
@@ -23,6 +22,7 @@
 #include <vector>
 
 #define int long long
+
 #define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
 #define REPS(i, n) for (int i = 1, i##_len = (n); i <= i##_len; ++i)
 #define FOR(i, a, b) for (int i = (a), i##_len = (b); i <= i##_len; ++i)
@@ -33,32 +33,36 @@
 
 using namespace std;
 
+typedef pair<int, int> P;
+
+int N, A[300000];
+P f[300000];
+
+P merge(P& l, P& r) {
+    vector<int> v = {l.first, l.second, r.first, r.second};
+    sort(v.begin(), v.end());
+    return {v[3], v[2]};
+}
+
 signed main() {
     ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-    cout.tie(nullptr);
+    cin.tie(NULL);
+    cout.tie(NULL);
 
-    int k;
-    cin >> k;
+    cin >> N;
+    REP(i, 1 << N) cin >> A[i];
+    REP(i, 1 << N) f[i] = {A[i], 0};
 
-    vector<int> a(k);
-    REP(i, k) cin >> a[i];
-    reverse(a.begin(), a.end());
-
-    int l, r;
-    l = r = 2;
-    REP(i, k) {
-        int val = a[i];
-        int lt = (l + val - 1) / val * val;
-        int rt = r / val * val;
-        if (lt > r || rt < l) {
-            cout << -1 << endl;
-            return 0;
+    REP(i, N) REP(j, 1 << N) {
+        if (j & 1 << i) {
+            f[j] = merge(f[j], f[j ^ 1 << i]);
         }
-        l = lt;
-        r = rt + val - 1;
     }
-    cout << l << " " << r << endl;
 
+    int ans = 0;
+    FOR(i, 1, (1 << N) - 1) {
+        ans = max(ans, f[i].first + f[i].second);
+        cout << ans << endl;
+    }
     return 0;
 }

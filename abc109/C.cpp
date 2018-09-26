@@ -29,36 +29,32 @@
 #define REV(i, a, b) for (int i = (a); i >= (b); --i)
 #define CLR(a, b) memset((a), (b), sizeof(a))
 #define DUMP(x) cout << #x << " = " << (x) << endl;
-#define INF (LLONG_MAX - 1e5)
+#define INF 1001001001001001001ll
+#define fcout cout << fixed << setprecision(10)
 
 using namespace std;
+
+
+int gcd(int a, int b) { return b ? gcd(b, a % b) : a; }
 
 signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    int k;
-    cin >> k;
+    int N, X;
+    cin >> N >> X;
 
-    vector<int> a(k);
-    REP(i, k) cin >> a[i];
-    reverse(a.begin(), a.end());
+    vector<int> x(N + 1);
+    REP(i, N) cin >> x[i];
+    x[N] = X;
+    sort(x.begin(), x.end());
 
-    int l, r;
-    l = r = 2;
-    REP(i, k) {
-        int val = a[i];
-        int lt = (l + val - 1) / val * val;
-        int rt = r / val * val;
-        if (lt > r || rt < l) {
-            cout << -1 << endl;
-            return 0;
-        }
-        l = lt;
-        r = rt + val - 1;
+    int ans = x[1] - x[0];
+    FOR(i, 1, x.size() - 2) {
+        ans = gcd(ans, x[i+1] - x[i]);
     }
-    cout << l << " " << r << endl;
+    cout << ans << endl;
 
     return 0;
 }

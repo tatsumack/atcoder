@@ -29,7 +29,8 @@
 #define REV(i, a, b) for (int i = (a); i >= (b); --i)
 #define CLR(a, b) memset((a), (b), sizeof(a))
 #define DUMP(x) cout << #x << " = " << (x) << endl;
-#define INF (LLONG_MAX - 1e5)
+#define INF 1001001001001001001ll
+#define fcout cout << fixed << setprecision(10)
 
 using namespace std;
 
@@ -38,27 +39,33 @@ signed main() {
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    int k;
-    cin >> k;
+    int n, x;
+    cin >> n >> x;
 
-    vector<int> a(k);
-    REP(i, k) cin >> a[i];
-    reverse(a.begin(), a.end());
+    vector<int> t(n);
+    REP(i, n) cin >> t[i];
 
-    int l, r;
-    l = r = 2;
-    REP(i, k) {
-        int val = a[i];
-        int lt = (l + val - 1) / val * val;
-        int rt = r / val * val;
-        if (lt > r || rt < l) {
-            cout << -1 << endl;
-            return 0;
-        }
-        l = lt;
-        r = rt + val - 1;
+    vector<vector<int>> dp(n + 1, vector<int>(n + 1));
+
+    REP(j, n) {
+        dp[j][1] = x;
     }
-    cout << l << " " << r << endl;
+    REP(j, n) {
+        FOR(k, 1, n - 1) {
+            auto itr = lower_bound(t.begin(), t.end(), t[j] + x);
+            int high = itr - t.begin();
+            int low = high - 1;
+            if (high > j) dp[high][k + 1] = max(dp[high][k + 1], dp[j][k] + min(t[high] - t[j], x));
+            if (low > j) dp[low][k + 1] = max(dp[low][k + 1], dp[j][k] + min(t[low] - t[j], x));
+        }
+    }
+    int ans = 0;
+    FOR(k, 1, n) {
+        REP(j, n) {
+            ans = max(ans, dp[j][k]);
+        }
+        cout << ans << endl;
+    }
 
     return 0;
 }

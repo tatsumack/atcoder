@@ -29,7 +29,8 @@
 #define REV(i, a, b) for (int i = (a); i >= (b); --i)
 #define CLR(a, b) memset((a), (b), sizeof(a))
 #define DUMP(x) cout << #x << " = " << (x) << endl;
-#define INF (LLONG_MAX - 1e5)
+#define INF 1001001001001001001ll
+#define fcout cout << fixed << setprecision(10)
 
 using namespace std;
 
@@ -38,27 +39,24 @@ signed main() {
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    int k;
-    cin >> k;
+    int N, K;
+    cin >> N >> K;
+    vector<int> b(N+1);
+    REP(i, N) cin >> b[i+1];
 
-    vector<int> a(k);
-    REP(i, k) cin >> a[i];
-    reverse(a.begin(), a.end());
+    int dp[200005][2];
+    CLR(dp, -INF);
 
-    int l, r;
-    l = r = 2;
-    REP(i, k) {
-        int val = a[i];
-        int lt = (l + val - 1) / val * val;
-        int rt = r / val * val;
-        if (lt > r || rt < l) {
-            cout << -1 << endl;
-            return 0;
+    dp[0][1] = 0;
+    FOR(i, 1, N) {
+        if (i + K - 1 <= N) {
+            dp[i+K-1][0] = max(dp[i-1][0], dp[i-1][1]);
         }
-        l = lt;
-        r = rt + val - 1;
+
+        dp[i][0] = max(dp[i-1][0], dp[i][0]);
+        dp[i][1] = max({dp[i-1][1] + b[i], dp[i-1][0] + b[i], dp[i][1]});
     }
-    cout << l << " " << r << endl;
+    cout << max(dp[N][0], dp[N][1]) << endl;
 
     return 0;
 }

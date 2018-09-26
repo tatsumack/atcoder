@@ -38,5 +38,51 @@ signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+
+    int n, k;
+    cin >> n >> k;
+
+    vector<int> L;
+    vector<int> R;
+    REP(i, n) {
+        int x;
+        cin >> x;
+        if (x < 0)
+        {
+            L.push_back(x);
+        } else
+        {
+            R.push_back(x);
+        }
+    }
+    sort(L.begin(), L.end(), greater<int>());
+    sort(R.begin(), R.end());
+
+    // left
+    int ans = INF;
+    FOR(i, 1, k) {
+        if (i > L.size()) break;
+        int lans = 0;
+        lans += abs(L[i-1]);
+        if (i < k) {
+            if (k - i - 1 >= R.size()) continue;
+            lans += 2 * R[k - i - 1];
+        }
+        ans = min(ans, lans);
+    }
+
+    FOR(i, 1, k) {
+        if (i > R.size()) break;
+        int rans = 0;
+        rans += abs(R[i-1]);
+        if (i < k) {
+            if (k - i - 1 >= L.size()) continue;
+            rans += 2 * abs(L[k - i - 1]);
+        }
+        ans = min(ans, rans);
+    }
+
+    cout << ans << endl;
+
     return 0;
 }

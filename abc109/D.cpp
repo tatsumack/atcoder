@@ -29,36 +29,50 @@
 #define REV(i, a, b) for (int i = (a); i >= (b); --i)
 #define CLR(a, b) memset((a), (b), sizeof(a))
 #define DUMP(x) cout << #x << " = " << (x) << endl;
-#define INF (LLONG_MAX - 1e5)
+#define INF 1001001001001001001ll
+#define fcout cout << fixed << setprecision(10)
 
 using namespace std;
+
+typedef pair<int, int> P;
+
 
 signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    int k;
-    cin >> k;
+    int H, W;
+    cin >> H >> W;
 
-    vector<int> a(k);
-    REP(i, k) cin >> a[i];
-    reverse(a.begin(), a.end());
+    int a[505][505];
+    CLR(a, 0);
+    REP(i, H) REP(j, W) cin >> a[i][j];
 
-    int l, r;
-    l = r = 2;
-    REP(i, k) {
-        int val = a[i];
-        int lt = (l + val - 1) / val * val;
-        int rt = r / val * val;
-        if (lt > r || rt < l) {
-            cout << -1 << endl;
-            return 0;
+    vector<pair<P, P> > ans;
+    REP(i, H) REP(j, W - 1) {
+            if (a[i][j] % 2 == 1) {
+                a[i][j]--;
+                a[i][j + 1]++;
+                ans.push_back({{i, j},
+                               {i, j + 1}});
+            }
         }
-        l = lt;
-        r = rt + val - 1;
+    REP(i, H - 1) {
+        if (a[i][W - 1] % 2 == 1) {
+            a[i][W - 1]--;
+            a[i + 1][W - 1]++;
+            ans.push_back({{i,     W - 1},
+                           {i + 1, W - 1}});
+        }
     }
-    cout << l << " " << r << endl;
+
+    cout << ans.size() << endl;
+    REP(i, ans.size()) {
+        auto prev = ans[i].first;
+        auto next = ans[i].second;
+        cout << prev.first + 1 << " " << prev.second + 1 << " " << next.first + 1 << " " << next.second + 1 << endl;
+    }
 
     return 0;
 }

@@ -29,7 +29,8 @@
 #define REV(i, a, b) for (int i = (a); i >= (b); --i)
 #define CLR(a, b) memset((a), (b), sizeof(a))
 #define DUMP(x) cout << #x << " = " << (x) << endl;
-#define INF (LLONG_MAX - 1e5)
+#define INF 1001001001001001001ll
+#define fcout cout << fixed << setprecision(10)
 
 using namespace std;
 
@@ -38,27 +39,24 @@ signed main() {
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    int k;
-    cin >> k;
+    string s;
+    cin >> s;
 
-    vector<int> a(k);
-    REP(i, k) cin >> a[i];
-    reverse(a.begin(), a.end());
-
-    int l, r;
-    l = r = 2;
-    REP(i, k) {
-        int val = a[i];
-        int lt = (l + val - 1) / val * val;
-        int rt = r / val * val;
-        if (lt > r || rt < l) {
-            cout << -1 << endl;
-            return 0;
+    int dp[20][2][10];
+    CLR(dp, 0);
+    dp[0][0][0] = 1;
+    REP (i, s.size()) REP(j, 2) REP(k, 10) {
+        int lim = j ? 9 : s[i] - '0';
+        REP (d, lim + 1) {
+            dp[i+1][j || d < lim][k + (d == 1)] += dp[i][j][k];
         }
-        l = lt;
-        r = rt + val - 1;
     }
-    cout << l << " " << r << endl;
+
+    int res = 0;
+    REP (j, 2) REP(k, 10) {
+        res += dp[s.size()][j][k] * k;
+    }
+    cout << res << endl;
 
     return 0;
 }

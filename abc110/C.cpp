@@ -29,7 +29,8 @@
 #define REV(i, a, b) for (int i = (a); i >= (b); --i)
 #define CLR(a, b) memset((a), (b), sizeof(a))
 #define DUMP(x) cout << #x << " = " << (x) << endl;
-#define INF (LLONG_MAX - 1e5)
+#define INF 1001001001001001001ll
+#define fcout cout << fixed << setprecision(10)
 
 using namespace std;
 
@@ -38,27 +39,40 @@ signed main() {
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    int k;
-    cin >> k;
+    string S, T;
+    cin >> S >> T;
 
-    vector<int> a(k);
-    REP(i, k) cin >> a[i];
-    reverse(a.begin(), a.end());
+    map<char, char> map1;
+    map<char, char> map2;
+    REP(i, S.size()) {
+        char s = S[i];
+        char t = T[i];
 
-    int l, r;
-    l = r = 2;
-    REP(i, k) {
-        int val = a[i];
-        int lt = (l + val - 1) / val * val;
-        int rt = r / val * val;
-        if (lt > r || rt < l) {
-            cout << -1 << endl;
-            return 0;
+        if (map1.count(s) > 0)
+        {
+            char ns = map1[s];
+            if (ns != t) {
+                cout << "No" << endl;
+                return 0;
+            }
         }
-        l = lt;
-        r = rt + val - 1;
-    }
-    cout << l << " " << r << endl;
 
+        if (map2.count(t) > 0) {
+            char nt = map2[t];
+            if (nt != s) {
+                cout << "No" << endl;
+                return 0;
+            }
+        }
+
+        if (map1.count(s) == 0) {
+            map1[s] = t;
+        }
+        if (map2.count(t) == 0) {
+            map2[t] = s;
+        }
+    }
+
+    cout << "Yes" << endl;
     return 0;
 }

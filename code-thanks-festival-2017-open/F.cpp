@@ -29,36 +29,52 @@
 #define REV(i, a, b) for (int i = (a); i >= (b); --i)
 #define CLR(a, b) memset((a), (b), sizeof(a))
 #define DUMP(x) cout << #x << " = " << (x) << endl;
-#define INF (LLONG_MAX - 1e5)
+#define INF 1001001001001001001ll
+#define fcout cout << fixed << setprecision(10)
 
 using namespace std;
+
+int mod = 1e9 + 7;
+
+void add(int& a, int b) {
+    a += b;
+    if (a >= mod)
+        a -= mod;
+}
 
 signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    int k;
-    cin >> k;
+    int n, k;
+    cin >> n >> k;
 
-    vector<int> a(k);
-    REP(i, k) cin >> a[i];
-    reverse(a.begin(), a.end());
+    vector<int> a(n);
+    REP(i, n) cin >> a[i];
+    sort(a.begin(), a.end());
 
-    int l, r;
-    l = r = 2;
-    REP(i, k) {
-        int val = a[i];
-        int lt = (l + val - 1) / val * val;
-        int rt = r / val * val;
-        if (lt > r || rt < l) {
-            cout << -1 << endl;
-            return 0;
+    int dp[2][100005];
+    CLR(dp, 0);
+
+    dp[0][0] = 1;
+    int cur = 0;
+    int limit = 0;
+    REP(i, n) {
+        int next = cur ^1;
+        FOR(j, 0, limit) {
+            dp[next][j] = 0;
         }
-        l = lt;
-        r = rt + val - 1;
+        FOR(j, 0, limit) {
+            add(dp[next][j], dp[cur][j]);
+            add(dp[next][j ^ a[i]], dp[cur][j]);
+        }
+        limit |= a[i];
+        cur ^= 1;
     }
-    cout << l << " " << r << endl;
+
+    cout << dp[cur][k] << endl;
+
 
     return 0;
 }
