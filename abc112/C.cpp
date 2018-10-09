@@ -38,5 +38,56 @@ signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+
+    int N;
+    cin >> N;
+
+    vector<int> x(N);
+    vector<int> y(N);
+    vector<int> h(N);
+    REP(i, N) cin >> x[i] >> y[i] >> h[i];
+
+    int ansx = -1;
+    int ansy = -1;
+    int H = -1;
+    REP(cx, 101) {
+        REP(cy, 101) {
+            H = -1;
+            REP(i, N) {
+                if (h[i] == 0) continue;
+
+                int th = h[i] + abs(x[i] - cx) + abs(y[i] - cy);
+                if (th < 1) {
+                    H = -1;
+                    break;
+                }
+
+                if (H != -1 && th != H) {
+                    H = -1;
+                    break;
+                }
+                H = th;
+            }
+            if (H < 1) continue;
+            REP(i, N) {
+                if (h[i] > 0) continue;
+                int th = H - abs(x[i] - cx) - abs(y[i] - cy);
+                if (th > 0) {
+                    H = -1;
+                    break;
+                }
+            }
+            if (H < 1) continue;
+
+            ansx = cx;
+            ansy = cy;
+            break;
+        }
+        if (H >= 1) {
+            break;
+        }
+    }
+    cout << ansx << " " << ansy << " " << H << endl;
+
     return 0;
 }

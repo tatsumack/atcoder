@@ -38,5 +38,22 @@ signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+
+    int N, T;
+    cin >> N >> T;
+
+    int ans = INF;
+    REP(i, N) {
+        int c, t;
+        cin >> c >> t;
+        if (t > T) continue;
+        ans = min(ans, c);
+    }
+    if (ans == INF) {
+        cout << "TLE" << endl;
+    }
+    else {
+        cout << ans << endl;
+    }
     return 0;
 }

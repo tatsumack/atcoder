@@ -38,5 +38,16 @@ signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+
+    int N;
+    cin >> N;
+    if (N == 1) {
+        cout << "Hello World" << endl;
+    }
+    else {
+        int A, B;
+        cin >> A >> B;
+        cout << A+ B << endl;
+    }
     return 0;
 }
