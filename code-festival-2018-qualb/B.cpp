@@ -38,5 +38,21 @@ signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+
+    int N, X;
+    cin >> N >> X;
+
+    int t = 0;
+    int ans = 0;
+    REP(i, N) {
+        int a, b;
+        cin >> a >> b;
+        ans += a * b;
+        t = max(t, b);
+    }
+
+    ans += t * X;
+    cout << ans << endl;
+
     return 0;
 }

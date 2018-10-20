@@ -38,5 +38,17 @@ signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+
+    int N;
+    cin >> N;
+
+    int ans = 0;
+    FOR(i, 1, 100) {
+        if (i % N == 0)
+        {
+            ans++;
+        }
+    }
+    cout << 100 - ans << endl;
     return 0;
 }
