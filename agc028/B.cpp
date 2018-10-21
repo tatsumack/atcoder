@@ -36,28 +36,25 @@ using namespace std;
 
 
 int mod = 1e9 + 7;
-int sum[100005];
-int dp[100005][100005];
 
-int f(int l, int r, const vector<int>& A) {
-    if (dp[l][r] > 0) return dp[l][r];
-
-    if (r <= l) {
-        return 0;
+int modinv(int a, int m) {
+    int b = m, u = 1, v = 0;
+    while (b) {
+        int t = a / b;
+        a -= t * b;
+        swap(a, b);
+        u -= t * v;
+        swap(u, v);
     }
+    u %= m;
+    if (u < 0) u += m;
+    return u;
+}
 
-    int res = 0;
-    FOR(m, l, r - 1) {
-        int tmp = (sum[r] - sum[l]) % mod;
-        tmp = (tmp + f(l, m, A)) % mod;
-        tmp = (tmp + f(m + 1, r, A)) % mod;
-        if (l < m && m < r-1) {
-            tmp = (tmp*2) % mod;
-        }
-        res = (res + tmp) % mod;
-    }
-
-    return dp[l][r] = res;
+void add(int& a, int b) {
+    a += b;
+    if (a >= mod)
+        a -= mod;
 }
 
 signed main() {
@@ -65,16 +62,27 @@ signed main() {
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-
     int N;
     cin >> N;
-    vector<int> A(N);
+
+    vector<int> invs(N), suminv(N + 1);
     REP(i, N) {
-        cin >> A[i];
-        sum[i + 1] = (sum[i] + A[i]) % mod;
+        invs[i] = modinv(i + 1, mod);
+        suminv[i + 1] = (suminv[i] + invs[i]) % mod;
     }
 
-    int ans = f(0, N, A);
+    int ans = 0;
+    REP(i, N) {
+        int a;
+        cin >> a;
+
+        add(ans, a * (suminv[i + 1] + suminv[N - i] - 1) % mod);
+    }
+
+    FOR(i, 1, N) {
+        ans = (ans * i) % mod;
+    }
+
     cout << ans << endl;
 
     return 0;
