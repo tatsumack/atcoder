@@ -33,6 +33,7 @@
 #define fcout cout << fixed << setprecision(10)
 
 using namespace std;
+int dp[51][51][3000];
 
 signed main() {
     ios::sync_with_stdio(false);
@@ -43,49 +44,22 @@ signed main() {
     cin >> N >> A;
     vector<int> x(N);
     REP(i, N) cin >> x[i];
-    sort(x.begin(), x.end());
 
-    int s = -1;
-    int d = INF;
+    CLR(dp, 0);
+
+    dp[0][0][0] = 1;
     REP(i, N) {
-        x[i] = A - x[i];
-        if (abs(x[i] < d)) {
-            d = abs(x[i]);
-            s = i;
+        REP(j, N) {
+            REP(k, 3000) {
+                dp[i + 1][j + 1][k + x[i]] += dp[i][j][k];
+                dp[i + 1][j][k] += dp[i][j][k];
+            }
         }
     }
 
-    int l = s;
-    int r = s;
-    int sum = x[s];
     int ans = 0;
-    while (l >= 0 && r < N) {
-        if (sum == 0) {
-            ans++;
-            if (l > 0) {
-                l--;
-                sum += x[l];
-            }
-            else if (r < N){
-                r++;
-                sum += x[r];
-            }
-            else {
-                break;
-            }
-
-        }
-
-        if (sum < 0) {
-            if (l == 0) break;
-            l--;
-            sum += x[l];
-        }
-        else {
-            if (r == N-1) break;
-            r++;
-            sum += x[r];
-        }
+    FOR(j, 1, N) {
+        ans += dp[N][j][j * A];
     }
     cout << ans << endl;
 

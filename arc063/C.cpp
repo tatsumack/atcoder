@@ -38,5 +38,17 @@ signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+
+    string s;
+    cin >> s;
+
+    int ans = 0;
+    char prev = s[0];
+    REP(i, s.size()) {
+        if (s[i] != prev) ans++;
+        prev = s[i];
+    }
+    cout << ans << endl;
+
     return 0;
 }

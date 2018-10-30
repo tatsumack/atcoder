@@ -38,5 +38,47 @@ signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+
+    string s;
+    cin >> s;
+
+    int cur = 0;
+    bool ok = true;
+    REP(i, s.size()) {
+        if (cur >= s.size()) break;
+
+        if (s.find("eraser", cur) == cur) {
+            cur += 6;
+            continue;
+        }
+
+        if (s.find("erase", cur) == cur) {
+            cur += 5;
+            continue;
+        }
+
+        if (s.find("dreamer", cur) == cur) {
+            if (cur + 7 >= s.size()) continue;
+            if (s[cur + 7] == 'd' || s[cur + 7] == 'e') {
+                cur += 7;
+                continue;
+            }
+        }
+
+        if (s.find("dream", cur) == cur) {
+            cur += 5;
+            continue;
+        }
+
+        ok = false;
+        break;
+    }
+
+    if (ok) {
+        cout << "YES" << endl;
+    } else {
+        cout << "NO" << endl;
+    }
+
     return 0;
 }

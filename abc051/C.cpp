@@ -38,5 +38,43 @@ signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+
+    int sx, sy, tx, ty;
+    cin >> sx >> sy >> tx >> ty;
+    int dx = tx - sx;
+    int dy = ty - sy;
+
+    REP(i, dy) {
+        cout << 'U';
+    }
+    REP(i, dx) {
+        cout << 'R';
+    }
+    REP(i, dy) {
+        cout << 'D';
+    }
+    REP(i, dx) {
+        cout << 'L';
+    }
+
+    cout << 'L';
+    REP(i, dy+1) {
+        cout << 'U';
+    }
+    REP(i, dx+1) {
+        cout << 'R';
+    }
+    cout << 'D';
+
+    cout << 'R';
+    REP(i, dy+1) {
+        cout << 'D';
+    }
+    REP(i, dx+1) {
+        cout << 'L';
+    }
+    cout << 'U';
+
+
     return 0;
 }

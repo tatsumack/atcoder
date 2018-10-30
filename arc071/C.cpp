@@ -38,5 +38,39 @@ signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+
+    int n;
+    cin >> n;
+
+
+    vector<int> cnt(26);
+
+    REP(i, n) {
+        string s;
+        cin >> s;
+
+
+        vector<int> tmp(26);
+        REP(j, s.size()) {
+            if (i == 0) {
+                cnt[s[j] - 'a']++;
+                continue;
+            }
+            tmp[s[j] - 'a']++;
+        }
+        if (i == 0) continue;
+        REP(j, cnt.size()) {
+            cnt[j] = min(tmp[j], cnt[j]);
+        }
+    }
+
+    string ans;
+    REP(i, cnt.size()) {
+        REP(j, cnt[i]) {
+            ans += (char) ('a' + i);
+        }
+    }
+    cout << ans << endl;
+
     return 0;
 }

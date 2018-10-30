@@ -38,5 +38,16 @@ signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+    int N, M;
+    cin >> N >> M;
+
+    int ans = 0;
+
+    int num = min(N, M / 2);
+    ans += num;
+    M -= num * 2;
+
+    ans += M / 4;
+    cout << ans << endl;
     return 0;
 }

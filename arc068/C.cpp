@@ -38,5 +38,20 @@ signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+
+    int x;
+    cin >> x;
+
+    int ans = 0;
+    ans += x / 11 * 2;
+    int cur = x / 11 * 11;
+    if (cur < x) {
+        cur += 6;
+        ans++;
+        if (cur < x) {
+            ans++;
+        }
+    }
+    cout << ans << endl;
     return 0;
 }

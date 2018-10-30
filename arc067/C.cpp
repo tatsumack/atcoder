@@ -34,9 +34,42 @@
 
 using namespace std;
 
+int mod = 1e9 + 7;
+
+vector<int> primefactors(int a) {
+    vector<int> s;
+    for (int i = 2; i * i <= a; i++) {
+        if (a % i != 0) continue;
+        while (a % i == 0) {
+            a /= i;
+            s.push_back(i);
+        }
+    }
+    if (a > 1) s.push_back(a);
+    return s;
+}
+
 signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+
+    int N;
+    cin >> N;
+
+    map<int, int> cnt;
+    FOR(n, 1, N) {
+        auto v = primefactors(n);
+        REP(i, v.size()) {
+            cnt[v[i]]++;
+        }
+    }
+
+    int ans = 1;
+    for (auto kv : cnt) {
+        ans = (ans * (kv.second + 1)) % mod;
+    }
+    cout << ans << endl;
+
     return 0;
 }

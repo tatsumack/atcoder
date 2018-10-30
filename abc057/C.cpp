@@ -38,5 +38,23 @@ signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+
+    int N;
+    cin >> N;
+
+    int ans = INF;
+    for (int i = 1; i * i <= N; i++) {
+        if (N % i != 0) continue;
+        int t = N / i;
+        ans = min(ans, t);
+    }
+
+    int res = 0;
+    while (ans > 0) {
+        res++;
+        ans /= 10;
+    }
+    cout << res << endl;
+
     return 0;
 }

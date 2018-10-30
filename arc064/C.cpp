@@ -38,5 +38,23 @@ signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+
+    int N, x;
+    cin >> N >> x;
+    vector<int> a(N);
+    REP(i, N) cin >> a[i];
+
+    int ans = 0;
+    REP(i, N - 1) {
+        int sum1 = a[i] + a[i + 1];
+        if (sum1 <= x) continue;
+
+        int diff = sum1 - x;
+        ans += diff;
+
+        a[i+1] = max(0LL, a[i+1] - diff);
+    }
+    cout << ans << endl;
+
     return 0;
 }

@@ -38,5 +38,35 @@ signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+
+    int N, K;
+    cin >> N >> K;
+
+    set<int> s;
+    REP(i, K) {
+        int d;
+        cin >> d;
+        s.insert(d);
+    }
+
+    int ans = N;
+    while (true) {
+        string str = to_string(ans);
+
+        bool ok = true;
+        REP(i, str.size()) {
+            char c = str[i];
+            if (s.count(c - '0') > 0) {
+                ok = false;
+                break;
+            }
+        }
+        if (ok) {
+            break;
+        }
+        ans++;
+    }
+
+    cout << ans << endl;
     return 0;
 }
