@@ -38,21 +38,20 @@ signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+
     int N;
     cin >> N;
-    vector<int> a(N), b(N);
-    REP(i, N) cin >> a[i] >> b[i];
+    vector<int> a(N);
+    REP(i, N) cin >> a[i];
 
-    reverse(a.begin(), a.end());
-    reverse(b.begin(), b.end());
 
-    int num = 0;
+    int odd = 0;
     REP(i, N) {
-        int t = a[i] + num;
-        if (t % b[i] == 0) continue;
-        num += b[i] - (t % b[i]);
+        if (a[i] % 2 == 1) {
+            odd++;
+        }
     }
-    cout << num << endl;
 
+    cout << (odd % 2 == 0 ? "YES" : "NO") << endl;
     return 0;
 }
