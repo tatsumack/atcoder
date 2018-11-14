@@ -39,43 +39,20 @@ signed main() {
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    string A;
-    cin >> A;
-
-    int n = A.size();
-
-    vector<int> next(26, 0);
-    vector<vector<int>> np(n + 2, vector<int>(26, 0));
-    REP(i, 26) np[n][i] = next[i] = n + 1;
-
-    vector<int> dp(n + 2);
-    REV(i, n, 0) {
-        int tmp = INF;
-        REP(j, 26) {
-            np[i][j] = next[j];
-            int pos = next[j];
-            int v = dp[pos];
-            if (v < tmp) {
-                tmp = v;
-            }
-        }
-        dp[i] = tmp + 1;
-        if (i > 0) next[A[i - 1] - 'a'] = i;
-    }
-
-    int cur = 0;
-    string ans;
-    while (cur < n + 1) {
-        REP(j, 26) {
-            int pos = np[cur][j];
-            if (dp[cur] - 1 == dp[pos]) {
-                ans += ('a' + j);
-                cur = pos;
-                break;
-            }
+    int N;
+    cin >> N;
+    FOR(h, 1, 3500) {
+        FOR(n, 1, 3500) {
+            int a = N * h * n;
+            int b = 4 * n * h - N * h - N * n;
+            if (b <= 0) continue;
+            if (a % b != 0) continue;
+            if (a / b <= 0) continue;
+            int w = a / b;
+            cout << h << " " << n << " " << w << endl;
+            return 0;
         }
     }
-    cout << ans << endl;
 
     return 0;
 }

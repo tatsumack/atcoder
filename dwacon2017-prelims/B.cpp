@@ -34,48 +34,37 @@
 
 using namespace std;
 
+int dp[100005][10];
+
 signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    string A;
-    cin >> A;
+    string T;
+    cin >> T;
 
-    int n = A.size();
-
-    vector<int> next(26, 0);
-    vector<vector<int>> np(n + 2, vector<int>(26, 0));
-    REP(i, 26) np[n][i] = next[i] = n + 1;
-
-    vector<int> dp(n + 2);
-    REV(i, n, 0) {
-        int tmp = INF;
-        REP(j, 26) {
-            np[i][j] = next[j];
-            int pos = next[j];
-            int v = dp[pos];
-            if (v < tmp) {
-                tmp = v;
+    int ans = 0;
+    REP(i, T.size()) {
+        if (i == 0) continue;
+        char c = T[i];
+        char prev = T[i - 1];
+        if (c == '?') {
+            if (prev == '2' || prev == '?') {
+                dp[i][5] = dp[i - 1][2] + 2;
+            }
+            dp[i][2] = dp[i - 1][5];
+        }
+        if (c == '2') {
+            dp[i][2] = dp[i - 1][5];
+        }
+        if (c == '5') {
+            if (prev == '2' || prev == '?') {
+                dp[i][5] = dp[i - 1][2] + 2;
             }
         }
-        dp[i] = tmp + 1;
-        if (i > 0) next[A[i - 1] - 'a'] = i;
-    }
-
-    int cur = 0;
-    string ans;
-    while (cur < n + 1) {
-        REP(j, 26) {
-            int pos = np[cur][j];
-            if (dp[cur] - 1 == dp[pos]) {
-                ans += ('a' + j);
-                cur = pos;
-                break;
-            }
-        }
+        ans = max(ans, dp[i][5]);
     }
     cout << ans << endl;
-
     return 0;
 }

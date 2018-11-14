@@ -34,46 +34,65 @@
 
 using namespace std;
 
+struct BIT {
+    int n;
+    vector<int> bit; // 1-indexd
+
+    BIT(int sz) {
+        bit.resize(sz + 1);
+        n = sz;
+    }
+
+    int sum(int i) {
+        int s = 0;
+        while (i > 0) {
+            s += bit[i];
+            i -= i & -i;
+        }
+        return s;
+    }
+
+    void add(int i, int x) {
+        while (i <= n) {
+            bit[i] += x;
+            i += i & -i;
+        }
+    }
+};
+
 signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    string A;
-    cin >> A;
-
-    int n = A.size();
-
-    vector<int> next(26, 0);
-    vector<vector<int>> np(n + 2, vector<int>(26, 0));
-    REP(i, 26) np[n][i] = next[i] = n + 1;
-
-    vector<int> dp(n + 2);
-    REV(i, n, 0) {
-        int tmp = INF;
-        REP(j, 26) {
-            np[i][j] = next[j];
-            int pos = next[j];
-            int v = dp[pos];
-            if (v < tmp) {
-                tmp = v;
-            }
-        }
-        dp[i] = tmp + 1;
-        if (i > 0) next[A[i - 1] - 'a'] = i;
+    int N, K;
+    cin >> N >> K;
+    vector<int> a(N);
+    vector<int> sum(N + 1);
+    REP(i, N) {
+        cin >> a[i];
+        sum[i + 1] = a[i] + sum[i];
+    }
+    vector<int> b(N + 1);
+    FOR(i, 1, N) {
+        b[i] = sum[i] - i * K;
+    }
+    vector<int> sb = b;
+    sort(sb.begin(), sb.end());
+    sb.erase(unique(sb.begin(), sb.end()), sb.end());
+    map<int, int> id;
+    REP(i, sb.size()) {
+        id[sb[i]] = i;
     }
 
-    int cur = 0;
-    string ans;
-    while (cur < n + 1) {
-        REP(j, 26) {
-            int pos = np[cur][j];
-            if (dp[cur] - 1 == dp[pos]) {
-                ans += ('a' + j);
-                cur = pos;
-                break;
-            }
-        }
+
+    // 転倒数
+    BIT bit(N + 1);
+    int ans = 0;
+    REP(i, b.size()) {
+        int idx = id[b[i]] + 1;
+        ans += bit.sum(idx);
+        bit.add(idx, 1);
     }
     cout << ans << endl;
 

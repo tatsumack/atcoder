@@ -34,48 +34,55 @@
 
 using namespace std;
 
+vector<int> C(1005, -1);
+vector<vector<int>> child(1005);
+int solve(int n) {
+    if (C[n] > 0) return C[n];
+
+    int t = INF;
+    REP(i, child[n].size())
+    {
+        t = min(solve(child[n][i]), t);
+    }
+    if (n == 0) {
+        return 0;
+    }
+    REP(i, child[n].size())
+    {
+        C[child[n][i]] = C[child[n][i]] - t;
+    }
+
+    return C[n] = t;
+}
+
 signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    string A;
-    cin >> A;
-
-    int n = A.size();
-
-    vector<int> next(26, 0);
-    vector<vector<int>> np(n + 2, vector<int>(26, 0));
-    REP(i, 26) np[n][i] = next[i] = n + 1;
-
-    vector<int> dp(n + 2);
-    REV(i, n, 0) {
-        int tmp = INF;
-        REP(j, 26) {
-            np[i][j] = next[j];
-            int pos = next[j];
-            int v = dp[pos];
-            if (v < tmp) {
-                tmp = v;
-            }
-        }
-        dp[i] = tmp + 1;
-        if (i > 0) next[A[i - 1] - 'a'] = i;
+    int N, M;
+    cin >> N >> M;
+    FOR(i, 1, N-1) {
+        int p;
+        cin >> p;
+        child[p].push_back(i);
     }
 
-    int cur = 0;
-    string ans;
-    while (cur < n + 1) {
-        REP(j, 26) {
-            int pos = np[cur][j];
-            if (dp[cur] - 1 == dp[pos]) {
-                ans += ('a' + j);
-                cur = pos;
-                break;
-            }
-        }
+    REP(i, M) {
+        int b, cc;
+        cin >> b >> cc;
+        C[b] = cc;
+    }
+
+    solve(0);
+
+    int ans = 0;
+    REP(i, N)  {
+        if (i == 0) continue;
+        ans += C[i];
     }
     cout << ans << endl;
+
 
     return 0;
 }
