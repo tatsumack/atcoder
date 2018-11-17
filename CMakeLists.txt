@@ -7,7 +7,7 @@ add_executable(B dwacon2018-prelims/B.cpp)
 add_executable(C arc081/C.cpp)
 
 add_executable(B2 arc103/B2.cpp)
-add_executable(E arc075/E.cpp)
+add_executable(E arc071/E.cpp)
 
 add_executable(D brue001/D.cpp)
 
