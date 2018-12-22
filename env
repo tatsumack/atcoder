@@ -1,3 +1,0 @@
-CONTEST_NAME=$1
-export CONTEST_URL=https://atcoder.jp/contests/${CONTEST_NAME}
-export TASK_URL=${CONTEST_URL}/tasks/${CONTEST_NAME}

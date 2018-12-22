@@ -1,0 +1,22 @@
+CONTEST_NAME=$1
+export CONTEST_URL=https://atcoder.jp/contests/${CONTEST_NAME}
+export TASK_URL=${CONTEST_URL}/tasks/${CONTEST_NAME}
+
+alias test_a="g++ A.cpp && oj test"
+alias test_b="g++ B.cpp && oj test"
+alias test_c="g++ C.cpp && oj test"
+alias test_d="g++ D.cpp && oj test"
+alias test_e="g++ E.cpp && oj test"
+alias test_f="g++ F.cpp && oj test"
+alias dl_a="rm -f test/* && oj dl ${TASK_URL}_a"
+alias dl_b="rm -f test/* && oj dl ${TASK_URL}_b"
+alias dl_c="rm -f test/* && oj dl ${TASK_URL}_c"
+alias dl_d="rm -f test/* && oj dl ${TASK_URL}_d"
+alias dl_e="rm -f test/* && oj dl ${TASK_URL}_d"
+alias dl_f="rm -f test/* && oj dl ${TASK_URL}_d"
+alias submit_a="oj submit ${TASK_URL}_a A.cpp"
+alias submit_b="oj submit ${TASK_URL}_b B.cpp"
+alias submit_c="oj submit ${TASK_URL}_c C.cpp"
+alias submit_d="oj submit ${TASK_URL}_d D.cpp"
+alias submit_e="oj submit ${TASK_URL}_e E.cpp"
+alias submit_f="oj submit ${TASK_URL}_f F.cpp"
