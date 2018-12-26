@@ -34,9 +34,78 @@
 
 using namespace std;
 
+int B = 0;
+int R = 1;
+
 signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+
+    int N, M, K;
+    cin >> N >> M >> K;
+
+    string s;
+    cin >> s;
+
+    vector<int> a(M), b(M);
+    REP(i, M) {
+        cin >> a[i] >> b[i];
+        a[i]--;
+        b[i]--;
+    }
+
+    vector<int> one(N);
+    REP(i, M) {
+        if (s[a[i]] == 'B') {
+            one[b[i]] |= 1 << B;
+        } else {
+            one[b[i]] |= 1 << R;
+        }
+        if (s[b[i]] == 'B') {
+            one[a[i]] |= 1 << B;
+        } else {
+            one[a[i]] |= 1 << R;
+        }
+    }
+
+    vector<int> two(N);
+    REP(i, M) {
+        if (one[a[i]] == (1 << B)) {
+            two[b[i]] |= 1 << B;
+        }
+        if (one[a[i]] == (1 << R)) {
+            two[b[i]] |= 1 << R;
+        }
+        if (one[b[i]] == (1 << B)) {
+            two[a[i]] |= 1 << B;
+        }
+        if (one[b[i]] == (1 << R)) {
+            two[a[i]] |= 1 << R;
+        }
+    }
+
+
+    bool isEven = (K % 2 == 0);
+    REP(i, N) {
+        if (isEven) {
+            if (s[i] == 'R') {
+                cout << "Second" << endl;
+                continue;
+            }
+            if (two[i] & (1 << B)) {
+                cout << "First" << endl;
+            } else {
+                cout << "Second" << endl;
+            }
+        } else {
+            if (one[i] & (1 << B)) {
+                cout << "First" << endl;
+            } else {
+                cout << "Second" << endl;
+            }
+        }
+    }
+
     return 0;
 }
