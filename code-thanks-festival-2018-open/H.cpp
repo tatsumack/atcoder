@@ -34,9 +34,46 @@
 
 using namespace std;
 
+int N;
+int a[1005], sum[1005];
+int dp1[1005], dp2[1005];
+
+bool check(int k) {
+    REP(i, N + 10) dp1[i] = dp2[i] = -3000;
+
+    dp1[N] = dp2[N] = 0;
+    REV(i, N - 1, 0) {
+        FOR(j, i + 1, N) {
+            dp1[i] = max(dp1[i], (sum[j] - sum[i] >= k ? 1 : -1) - dp2[j]);
+            dp2[i] = max(dp2[i], (sum[j] - sum[i] >= k ? -1 : 1) - dp1[j]);
+        }
+    }
+
+    return dp1[0] >= 0;
+}
+
 signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+
+    cin >> N;
+    REP(i, N) {
+        cin >> a[i];
+        sum[i + 1] = sum[i] + a[i];
+    }
+
+    int l = -INF;
+    int r = INF;
+    while (r - l > 1) {
+        int mid = (r + l) / 2;
+        if (check(mid)) {
+            l = mid;
+        } else {
+            r = mid;
+        }
+    }
+    cout << l << endl;
+
     return 0;
 }
