@@ -1,7 +1,7 @@
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ")
 
 
-add_executable(A dwacon5th-final-open/A.cpp)
+add_executable(A agc001/A.cpp)
 add_executable(B caddi2018/B.cpp)
 add_executable(C caddi2018/C.cpp)
 add_executable(D caddi2018/D.cpp)
