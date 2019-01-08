@@ -1,3 +1,4 @@
+
 #include <limits.h>
 #include <algorithm>
 #include <bitset>
@@ -33,27 +34,28 @@
 
 using namespace std;
 
-
 signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    int N;
-    cin >> N;
+    int N, K;
+    cin >> N >> K;
 
     vector<int> h(N);
     REP(i, N) cin >> h[i];
 
     int dp[100005];
-    FOR(i, 0, N) {
+    FOR(i, 0, N + 1) {
         dp[i] = INF;
     }
 
     dp[0] = 0;
     REP(i, N) {
-        dp[i + 1] = min(dp[i + 1], dp[i] + abs(h[i] - h[i + 1]));
-        dp[i + 2] = min(dp[i + 2], dp[i] + abs(h[i] - h[i + 2]));
+        FOR(j, 1, K) {
+            if (i + j >= N) break;
+            dp[i + j] = min(dp[i + j], dp[i] + abs(h[i] - h[i + j]));
+        }
     }
     cout << dp[N - 1] << endl;
 
