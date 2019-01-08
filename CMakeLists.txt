@@ -4,7 +4,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ")
 add_executable(A dp/A.cpp)
 add_executable(B dp/B.cpp)
 add_executable(C dp/C.cpp)
-add_executable(D caddi2018/D.cpp)
+add_executable(D dp/D.cpp)
 
 
 
