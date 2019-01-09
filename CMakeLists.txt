@@ -9,8 +9,8 @@ add_executable(D dp/D.cpp)
 
 
 add_executable(G code-thanks-festival-2018-open/G.cpp)
-add_executable(E code-thanks-festival-2018-open/E.cpp)
+add_executable(E dp/E.cpp)
 
-add_executable(F code-thanks-festival-2018-open/F.cpp)
+add_executable(F dp/F.cpp)
 
 add_executable(H code-thanks-festival-2018-open/H.cpp)
