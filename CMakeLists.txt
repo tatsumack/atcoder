@@ -13,4 +13,4 @@ add_executable(E dp/E.cpp)
 
 add_executable(F dp/F.cpp)
 
-add_executable(H code-thanks-festival-2018-open/H.cpp)
+add_executable(H dp/H.cpp)
