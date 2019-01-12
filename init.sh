@@ -3,8 +3,6 @@
 CONTEST_NAME=$1
 echo "initialize: $CONTEST_NAME"
 
-source ./env $CONTEST_NAME
-
 if [ ! -e $CONTEST_NAME ]; then
     echo "mkdir: $CONTEST_NAME"
     mkdir $CONTEST_NAME
