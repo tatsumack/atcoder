@@ -9,7 +9,7 @@ if [ ! -e $CONTEST_NAME ]; then
 fi
 
 if [ -z $2 ]; then
-    exit 0
+    $2 = 'all'
 fi
 
 if [ $2 = 'all' ] ; then
@@ -29,6 +29,4 @@ else
         echo "ERROR: $PROBREM.cpp is already existed."
     fi
 fi
-
-
 
