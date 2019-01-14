@@ -4,7 +4,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ")
 add_executable(A keyence2019/A.cpp)
 add_executable(B keyence2019/B.cpp)
 add_executable(C keyence2019/C.cpp)
-add_executable(D keyence2019/D.cpp)
+add_executable(D aising2019/D.cpp)
 
 
 
