@@ -25,3 +25,4 @@ add_executable(N dp/N.cpp)
 
 add_executable(O dp/O.cpp)
 add_executable(P dp/P.cpp)
+add_executable(Q dp/Q.cpp)
