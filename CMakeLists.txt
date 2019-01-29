@@ -1,10 +1,10 @@
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ")
 
 
-add_executable(A ddcc2019-final/A.cpp)
-add_executable(B abc116/B.cpp)
-add_executable(C abc116/C.cpp)
-add_executable(D abc116/D.cpp)
+add_executable(A nikkei2019-qual/A.cpp)
+add_executable(B nikkei2019-qual/B.cpp)
+add_executable(C nikkei2019-qual/C.cpp)
+add_executable(D abc020/D.cpp)
 
 
 
