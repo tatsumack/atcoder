@@ -46,6 +46,24 @@ void add(int& a, int b) {
     a += b;
     if (a >= mod) a -= mod;
 }
+void sub(int& a, int b) {
+    a %= mod;
+    b %= mod;
+    a -= b;
+    if (a < 0) a += mod;
+}
+
+// 素因数
+vector<int> getPrimeFactors(int a) {
+    vector<int> s;
+    for (int i = 2; i * i <= a; i++) {
+        if (a % i != 0) continue;
+        s.push_back(i);
+        while (a % i == 0) a /= i;
+    }
+    if (a > 1) s.push_back(a);
+    return s;
+}
 
 int modinv(int a, int m) {
     int b = m, u = 1, v = 0;
@@ -69,24 +87,54 @@ signed main() {
     int N, K;
     cin >> N >> K;
 
-    vector<int> g(K);
-    REP(i, K) g[i] = gcd(i, K);
+    vector<int> div;
+    for (int i = 1; i * i <= K; ++i) {
+        if (K % i == 0) {
+            div.push_back(i);
+            if (i != K / i) div.push_back(K / i);
+        }
+    }
 
-    int inv = modinv(2, mod);
+    int inv2 = modinv(2, mod);
 
     int ans = 0;
-    REV(n, N, N - K + 1) {
-        int a = n % K;
-        int num = n / K;
-        if (a > 0) num++;
-        if (a == 0) a += K;
-        int tmp = (((a + n) % mod) * num) % mod;
-        tmp *= inv;
-        tmp %= mod;
-        tmp *= K / g[n % K];
-        tmp %= mod;
+    REP(i, div.size()) {
+        int d = div[i];
+        int k = K / d;
+        int n = N / d;
+        auto facs = getPrimeFactors(k);
+        int tmp = 0;
+        REP(j, 1 << facs.size()) {
+            int mul = 1;
+
+            int cnt = 0;
+            REP(k, facs.size()) {
+                if (j >> k & 1) {
+                    mul *= facs[k];
+                    cnt++;
+                }
+            }
+
+            int dd = n / mul;
+            int f = mul % mod;
+            int l = (dd * mul) % mod;
+            int a = (f + l) % mod;
+            int sum = (a * dd) % mod;
+            sum *= inv2 % mod;
+            sum %= mod;
+
+            if (cnt % 2 == 1) {
+                sub(tmp, sum);
+            } else {
+                add(tmp, sum);
+            }
+        }
         add(ans, tmp);
     }
+
+    ans *= K;
+    ans %= mod;
+
     cout << ans << endl;
 
 
