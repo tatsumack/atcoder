@@ -1,10 +1,10 @@
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ")
 
 
-add_executable(A yahoo-procon2018-final-open/A.cpp)
-add_executable(B nikkei2019-qual/B.cpp)
-add_executable(C abc040/C.cpp)
-add_executable(D abc010/D.cpp)
+add_executable(A abc117/A.cpp)
+add_executable(B abc117/B.cpp)
+add_executable(C abc117/C.cpp)
+add_executable(D abc117/D.cpp)
 
 
 
