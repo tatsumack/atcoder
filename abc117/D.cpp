@@ -44,24 +44,32 @@ signed main() {
     vector<int> A(N);
     REP(i, N) cin >> A[i];
 
-    int tmp = 0;
-    REV(k, 50, 0) {
-        if (tmp + (1LL << k) > K) continue;
+    int res = 0;
+    REV(d, 50, -1) {
+        if (d >= 0 && ((1LL << d) & K) == 0) continue;
 
-        int cnt = 0;
+        int tmp = 0;
+        REV(k, 50, 0) {
+            if (k > d) {
+                tmp += ((1LL << k) & K);
+            } else if (k < d) {
+                int cnt = 0;
+                REP(i, A.size()) {
+                    if ((A[i] >> k) & 1LL) cnt++;
+                }
+                if (cnt * 2LL < A.size()) {
+                    tmp += (1LL << k);
+                }
+            }
+        }
+        int ans = 0;
         REP(i, A.size()) {
-            if ((A[i] >> k) & 1LL) cnt++;
+            ans += (tmp ^ A[i]);
         }
-
-        if (cnt * 2LL < A.size()) {
-            tmp += (1LL << k);
-        }
+        res = max(res, ans);
     }
 
-    int ans = 0;
-    REP(i, A.size()) {
-        ans += (tmp ^ A[i]);
-    }
-    cout << ans << endl;
+    cout << res << endl;
+
     return 0;
 }
