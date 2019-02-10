@@ -9,9 +9,9 @@ add_executable(D yahoo-procon2019-qual/D.cpp)
 
 
 add_executable(G dp/G.cpp)
-add_executable(E aising2019/E.cpp)
+add_executable(E yahoo-procon2019-qual/E.cpp)
 
-add_executable(F dp/F.cpp)
+add_executable(F yahoo-procon2019-qual/F.cpp)
 
 add_executable(H dp/H.cpp)
 

@@ -36,52 +36,57 @@
 using namespace std;
 
 typedef pair<int, int> P;
+typedef vector<int> Vec;
+typedef vector<Vec> Mat;
 
-int dp[200005][5]; // i番目までjの状態のときの最小操作回数
+int N, M;
+int mod = 998244353;
 
-int count(int a, int j) {
-    switch (j) {
-        case 0:
-        case 4:
-            return a;
-        case 1:
-        case 3:
-            if (a == 0) return 2;
-            return a % 2;
-        case 2:
-            if (a == 0) return 1;
-            return (a + 1) % 2;
-        default:
-            exit(1);
+int Gauss(Mat& A) {
+    int rank = 0;
+
+    REP(j, M) {
+        int pivot = -1;
+        FOR(i, rank, N - 1) {
+            if (A[i][j] == 1) {
+                pivot = i;
+                break;
+            }
+        }
+        if (pivot == -1) continue;
+        swap(A[rank], A[pivot]);
+        REP(i, N) {
+            if (i == rank) continue;
+            if (A[i][j] == 0) continue;
+            REP(k, M) {
+                A[i][k] ^= A[rank][k];
+            }
+        }
+        ++rank;
     }
+    return rank;
+}
+
+int binpow(int x, int p) {
+    if (p == 0) return 1;
+
+    if (p % 2 == 0)
+        return binpow((x * x) % mod, p / 2);
+    else
+        return (x * binpow(x, p - 1)) % mod;
 }
 
 signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+    cin >> N >> M;
 
-    int L;
-    cin >> L;
-    vector<int> A(L);
-    REP(i, L) cin >> A[i];
+    Mat A(N, Vec(M));
+    REP(i, N) REP(j, M) cin >> A[i][j];
 
-    REP(i, L + 1) REP(j, 5) dp[i][j] = INF;
-
-    dp[0][0] = 0;
-    REP(i, L) {
-        int prev = dp[i][0];
-        REP(j, 5) {
-            prev = min(prev, dp[i][j]);
-            dp[i + 1][j] = min(dp[i + 1][j], prev + count(A[i], j));
-        }
-    }
-
-    int ans = INF;
-    REP(j, 5) {
-        ans = min(ans, dp[L][j]);
-    }
-    cout << ans << endl;
+    int rank = Gauss(A);
+    cout << (binpow(2, N + M - 1) - binpow(2, N + M - rank - 1) + mod) % mod << endl;
 
     return 0;
 }

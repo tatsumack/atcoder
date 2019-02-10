@@ -37,51 +37,54 @@ using namespace std;
 
 typedef pair<int, int> P;
 
-int dp[200005][5]; // i番目までjの状態のときの最小操作回数
-
-int count(int a, int j) {
-    switch (j) {
-        case 0:
-        case 4:
-            return a;
-        case 1:
-        case 3:
-            if (a == 0) return 2;
-            return a % 2;
-        case 2:
-            if (a == 0) return 1;
-            return (a + 1) % 2;
-        default:
-            exit(1);
-    }
-}
+int dp[4005][4005];
+int mod = 998244353;
 
 signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    int L;
-    cin >> L;
-    vector<int> A(L);
-    REP(i, L) cin >> A[i];
+    string s;
+    cin >> s;
 
-    REP(i, L + 1) REP(j, 5) dp[i][j] = INF;
+    int N = s.size();
 
-    dp[0][0] = 0;
-    REP(i, L) {
-        int prev = dp[i][0];
-        REP(j, 5) {
-            prev = min(prev, dp[i][j]);
-            dp[i + 1][j] = min(dp[i + 1][j], prev + count(A[i], j));
+    vector<int> sum(N + 1, 0);
+    REP(i, N) {
+        char c = s[i];
+        int r = 0;
+        switch (c) {
+            case '0':
+                r += 2;
+                break;
+            case '1':
+                r += 1;
+                break;
+        }
+        sum[i + 1] = sum[i] + r;
+    }
+
+    dp[0][0] = 1;
+    REP(i, 2 * N) {
+        REP(r, sum[i] + 1) {
+            if (r > i) break;
+
+            int t = i + 1 > N ? N : i + 1;
+
+            // 赤を足す
+            if (sum[t] >= r + 1) {
+                dp[i + 1][r + 1] += dp[i][r];
+                dp[i + 1][r + 1] %= mod;
+            }
+            // 青を足す
+            if ((i + 1) * 2 - sum[t] >= i + 1 - r) {
+                dp[i + 1][r] += dp[i][r];
+                dp[i + 1][r] %= mod;
+            }
         }
     }
 
-    int ans = INF;
-    REP(j, 5) {
-        ans = min(ans, dp[L][j]);
-    }
-    cout << ans << endl;
-
+    cout << dp[2 * N][sum[N]] << endl;
     return 0;
 }
