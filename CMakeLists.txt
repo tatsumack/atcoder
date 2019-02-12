@@ -4,7 +4,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ")
 add_executable(A yahoo-procon2019-qual/A.cpp)
 add_executable(B yahoo-procon2019-qual/B.cpp)
 add_executable(C yahoo-procon2019-qual/C.cpp)
-add_executable(D yahoo-procon2019-qual/D.cpp)
+add_executable(D abc008/D.cpp)
 
 
 
