@@ -94,7 +94,7 @@ signed main() {
         if (i >> 3 & 1) ty--, bnum++;
         if (tx < 0 || ty < 0) continue;
 
-        int tmp = (nCr(tx * ty, D + L) * nCr(D + L, D)) % mod;
+        int tmp = (nCr(tx * ty, D) * nCr(tx * ty - D, L)) % mod;
         if (bnum % 2 == 0) {
             res += tmp;
             res %= mod;
