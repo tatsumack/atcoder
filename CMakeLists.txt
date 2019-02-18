@@ -1,10 +1,10 @@
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ")
 
 
-add_executable(A yahoo-procon2019-qual/A.cpp)
-add_executable(B yahoo-procon2019-qual/B.cpp)
-add_executable(C yahoo-procon2019-qual/C.cpp)
-add_executable(D abc001/D.cpp)
+add_executable(A abc118/A.cpp)
+add_executable(B abc118/B.cpp)
+add_executable(C abc118/C.cpp)
+add_executable(D code-festival-2018-final-open/D.cpp)
 
 
 
@@ -29,3 +29,5 @@ add_executable(Q dp/Q.cpp)
 add_executable(R dp/R.cpp)
 add_executable(S dp/S.cpp)
 add_executable(T dp/T.cpp)
+
+add_executable(D_tmp code-festival-2018-final-open/D_tmp.cpp)
