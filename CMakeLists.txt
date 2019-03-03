@@ -1,10 +1,10 @@
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ")
 
 
-add_executable(A abc119/A.cpp)
-add_executable(B abc119/B.cpp)
-add_executable(C abc119/C.cpp)
-add_executable(D abc119/D.cpp)
+add_executable(A abc120/A.cpp)
+add_executable(B abc120/B.cpp)
+add_executable(C abc120/C.cpp)
+add_executable(D abc120/D.cpp)
 
 
 
