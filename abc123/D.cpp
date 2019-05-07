@@ -42,13 +42,41 @@ signed main() {
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    vector<int> v;
-    for (int i = 0; i < 1000; i++) {
-        for (int j = 0; j < 1000; j++) {
-            for (int k = 0; k < 1000; k++) {
-                v.push_back(i * j * k);
-            }
+    int X, Y, Z, K;
+    cin >> X >> Y >> Z >> K;
+    vector<int> A(X), B(Y), C(Z);
+    REP(i, X) cin >> A[i];
+    REP(i, Y) cin >> B[i];
+    REP(i, Z) cin >> C[i];
+
+    priority_queue<int> pq1;
+    REP(i, X) {
+        REP(j, Y) {
+            pq1.push(A[i] + B[j]);
         }
     }
+
+    priority_queue<int> pq2;
+    int cnt = 0;
+    while (cnt < K && !pq1.empty()) {
+        int n = pq1.top();
+        pq1.pop();
+
+        REP(i, Z) {
+            pq2.push(C[i] + n);
+        }
+
+        cnt++;
+    }
+
+    cnt = 0;
+    while (cnt < K && !pq2.empty()) {
+        int n = pq2.top();
+        pq2.pop();
+        cout << n << endl;
+
+        cnt++;
+    }
+
     return 0;
 }
