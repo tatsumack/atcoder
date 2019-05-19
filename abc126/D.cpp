@@ -38,7 +38,7 @@
 using namespace std;
 
 template<typename T>
-vector <T> make_v(size_t a) { return vector<T>(a); }
+vector<T> make_v(size_t a) { return vector<T>(a); }
 
 template<typename T, typename... Ts>
 auto make_v(size_t a, Ts... ts) {
@@ -61,5 +61,50 @@ signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+
+
+    int N, M;
+    cin >> N >> M;
+
+    vector<pair<pair<int, int>, int>> l;
+    vector<int> t(M), r(M);
+    REP(i, M) {
+        int T, L, R;
+        cin >> T >> L >> R;
+        l.push_back({{L, -T}, i});
+        t[i] = T;
+        r[i] = R;
+    }
+    sort(l.begin(), l.end());
+
+    priority_queue<P> pq;
+    pq.push({0, N + 1});
+    int h = 0;
+    int pos = 0;
+    int idx = 0;
+    int res = 0;
+    while (!pq.empty()) {
+        while (!pq.empty() && pq.top().second < pos) {
+            pq.pop();
+        }
+        if (pq.empty()) break;
+
+        h = pq.top().first;
+        int rr = pq.top().second + 1;
+        while (idx < M && t[l[idx].second] <= h && l[idx].first.first <= rr) {
+            pq.push({t[l[idx].second], r[l[idx].second]});
+            idx++;
+        }
+        if (idx < M && l[idx].first.first <= rr) {
+            rr = l[idx].first.first;
+            pq.push({t[l[idx].second], r[l[idx].second]});
+            idx++;
+        }
+        res += h * (rr - pos);
+        pos = rr;
+    }
+    cout << res << endl;
+
+
     return 0;
 }
