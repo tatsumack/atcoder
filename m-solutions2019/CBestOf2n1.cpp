@@ -57,87 +57,131 @@ fill_v(T& t, const V& v) {
 
 typedef pair<int, int> P;
 
-int mod = 1e9 + 7;
-
-struct mint {
-    unsigned x;
-
-    mint() : x(0) {}
-
-    mint(signed sig) { x = sig < 0 ? sig % mod + mod : sig % mod; }
-
-    mint(signed long long sig) { x = sig < 0 ? sig % mod + mod : sig % mod; }
-
-    int get() const { return (int) x; }
-
-    mint& operator+=(mint that) {
-        if ((x += that.x) >= mod) x -= mod;
-        return *this;
-    }
-
-    mint& operator-=(mint that) {
-        if ((x += mod - that.x) >= mod) x -= mod;
-        return *this;
-    }
-
-    mint& operator*=(mint that) {
-        x = (unsigned long long) x * that.x % mod;
-        return *this;
-    }
-
-    mint& operator/=(mint that) { return *this *= that.inverse(); }
-
-    mint operator+(mint that) const { return mint(*this) += that; }
-
-    mint operator-(mint that) const { return mint(*this) -= that; }
-
-    mint operator*(mint that) const { return mint(*this) *= that; }
-
-    mint operator/(mint that) const { return mint(*this) /= that; }
-
-    mint inverse() const {
-        long long a = x, b = mod, u = 1, v = 0;
-        while (b) {
-            long long t = a / b;
-            a -= t * b;
-            std::swap(a, b);
-            u -= t * v;
-            std::swap(u, v);
-        }
-        return mint(u);
-    }
-
-    bool operator==(mint that) const { return x == that.x; }
-
-    bool operator!=(mint that) const { return x != that.x; }
-
-    mint operator-() const {
-        mint t;
-        t.x = x == 0 ? 0 : mod - x;
-        return t;
-    }
-};
-
-int gcd(int a, int b) { return b ? gcd(b, a % b) : a; }
+// nCr
+int fac[200005], rev[200005];
 
 class CBestOf2n1 {
 public:
+    static constexpr int kStressIterations = 0;
+
+    static void generateTest(std::ostream& test) {
+    }
+
+    const static int mod = 1e9 + 7;
+
+
+    int binpow(int x, int p) {
+        if (p == 0) return 1;
+
+        if (p % 2 == 0)
+            return binpow((x * x) % mod, p / 2);
+        else
+            return (x * binpow(x, p - 1)) % mod;
+    }
+
+    int nCr(int n, int r) {
+        if (r > n) return 0;
+        return ((fac[n] * rev[r]) % mod * rev[n - r]) % mod;
+    }
+
+    void precalc(int n) {
+        fac[0] = fac[1] = 1;
+        FOR(i, 2, n + 2)fac[i] = (fac[i - 1] * i) % mod;
+
+        rev[n + 1] = binpow(fac[n + 1], mod - 2) % mod;
+        REV(i, n, 0) { rev[i] = (rev[i + 1] * (i + 1)) % mod; }
+    }
+
+    struct mint {
+        unsigned x;
+
+        mint() : x(0) {}
+
+        mint(signed sig) { x = sig < 0 ? sig % mod + mod : sig % mod; }
+
+        mint(signed long long sig) { x = sig < 0 ? sig % mod + mod : sig % mod; }
+
+        int get() const { return (int) x; }
+
+        mint& operator+=(mint that) {
+            if ((x += that.x) >= mod) x -= mod;
+            return *this;
+        }
+
+        mint& operator-=(mint that) {
+            if ((x += mod - that.x) >= mod) x -= mod;
+            return *this;
+        }
+
+        mint& operator*=(mint that) {
+            x = (unsigned long long) x * that.x % mod;
+            return *this;
+        }
+
+        mint& operator/=(mint that) { return *this *= that.inverse(); }
+
+        mint operator+(mint that) const { return mint(*this) += that; }
+
+        mint operator-(mint that) const { return mint(*this) -= that; }
+
+        mint operator*(mint that) const { return mint(*this) *= that; }
+
+        mint operator/(mint that) const { return mint(*this) /= that; }
+
+        mint inverse() const {
+            long long a = x, b = mod, u = 1, v = 0;
+            while (b) {
+                long long t = a / b;
+                a -= t * b;
+                std::swap(a, b);
+                u -= t * v;
+                std::swap(u, v);
+            }
+            return mint(u);
+        }
+
+        bool operator==(mint that) const { return x == that.x; }
+
+        bool operator!=(mint that) const { return x != that.x; }
+
+        mint operator-() const {
+            mint t;
+            t.x = x == 0 ? 0 : mod - x;
+            return t;
+        }
+    };
+
+    mint calc(mint a, mint b) {
+        mint p = a / (a + b);
+        mint q = b / (a + b);
+
+        vector<mint> vp(2 * N + 1);
+        vp[0] = 1;
+        REP(i, 2 * N) vp[i + 1] = vp[i] * p;
+
+        vector<mint> vq(2 * N + 1);
+        vq[0] = 1;
+        REP(i, 2 * N) vq[i + 1] = vq[i] * q;
+
+        mint res = 0;
+        REP(m, N) {
+            res += vp[N] * vq[m] * nCr(N + m - 1, m) * (N + m) * 100 / (100 - C);
+        }
+
+        return res;
+    }
+
+    int N, A, B, C;
+
     void solve(std::istream& cin, std::ostream& cout) {
-        int N, A, B, C;
         cin >> N >> A >> B >> C;
 
-        // A
-        FOR(i, 1, 1000) {
-            FOR(j, 1, 1000) {
-                if (gcd(i, j) != 1) continue;
-                mint ii = i;
-                mint jj = j;
-                mint res = ii / jj;
-                if (res.get() == 312500008) {
-                    cout << i << endl;
-                    cout << j << endl;
-                }
-            }
-        }
+        precalc(2 * N + 1);
+
+        mint res = 0;
+        res += calc(A, B);
+        res += calc(B, A);
+
+        cout << res.get() << endl;
     }
 };
