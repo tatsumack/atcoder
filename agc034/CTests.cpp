@@ -37,29 +37,75 @@
 
 using namespace std;
 
-template<typename T>
-vector <T> make_v(size_t a) { return vector<T>(a); }
-
-template<typename T, typename... Ts>
-auto make_v(size_t a, Ts... ts) {
-    return vector<decltype(make_v<T>(ts...))>(a, make_v<T>(ts...));
-}
-
-template<typename T, typename V>
-typename enable_if<is_class<T>::value == 0>::type
-fill_v(T& t, const V& v) { t = v; }
-
-template<typename T, typename V>
-typename enable_if<is_class<T>::value != 0>::type
-fill_v(T& t, const V& v) {
-    for (auto& e:t) fill_v(e, v);
-}
-
 typedef pair<int, int> P;
 
 class CTests {
 public:
-    void solve(std::istream& cin, std::ostream& cout) {
+    static constexpr int kStressIterations = 0;
 
+    static void generateTest(std::ostream& test) {
+    }
+
+    int N, X;
+    int b[100005];
+    int l[100005];
+    int u[100005];
+    int aoki = 0;
+    vector<P> v;
+
+    bool check(int p) {
+        int k = p / X;
+        int d = p % X;
+
+        int sum = 0;
+        REP(i, k) {
+            sum += v[i].first;
+        }
+
+        if (d == 0) {
+            return sum >= aoki;
+        }
+
+        REP(t, N) {
+            int tmp = sum;
+            int i = v[t].second;
+            if (t < k) tmp += v[k].first - v[t].first;
+            if (d > b[i]) {
+                tmp += u[i] * (d - b[i]) + l[i] * b[i];
+            } else {
+                tmp += l[i] * d;
+            }
+            if (tmp >= aoki) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    void solve(std::istream& cin, std::ostream& cout) {
+        cin >> N >> X;
+
+        REP(i, N) {
+            cin >> b[i] >> l[i] >> u[i];
+            aoki += l[i] * b[i];
+        }
+        v.resize(N);
+        REP(i, N) {
+            v[i] = {u[i] * (X - b[i]) + l[i] * b[i], i};
+        }
+        sort(v.begin(), v.end(), greater<P>());
+
+        int low = -1;
+        int high = N * X;
+        while (high - low > 1) {
+            int mid = (high + low) / 2;
+            if (check(mid)) {
+                high = mid;
+            } else {
+                low = mid;
+            }
+        }
+        cout << high << endl;
     }
 };
