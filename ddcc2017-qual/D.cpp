@@ -1,4 +1,4 @@
-
+#include <iostream>
 #include <limits.h>
 #include <algorithm>
 #include <bitset>
@@ -21,6 +21,9 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <queue>
+#include <unordered_map>
+#include <unordered_set>
 
 #define int long long
 #define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
@@ -30,98 +33,71 @@
 #define CLR(a, b) memset((a), (b), sizeof(a))
 #define DUMP(x) cout << #x << " = " << (x) << endl;
 #define INF 1001001001001001001ll
-#define fcout cout << fixed << setprecision(10)
+#define fcout cout << fixed << setprecision(12)
 
 using namespace std;
 
-signed main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-    cout.tie(nullptr);
+typedef pair<int, int> P;
+
+class D {
+public:
+    static constexpr int kStressIterations = 0;
+
+    static void generateTest(std::ostream& test) {
+    }
 
     int H, W, A, B;
-    cin >> H >> W >> A >> B;
 
-    int id = 1;
-    vector<vector<int>> m(H, vector<int>(W, 0));
-    map<int, pair<int, int>> mmap;
-    REP(i, H) {
-        REP(j, W) {
-            char c;
-            cin >> c;
-            if (c != 'S') continue;
+    void solve(std::istream& cin, std::ostream& cout) {
+        cin >> H >> W >> A >> B;
 
-            m[i][j] = id;
-            mmap[id] = {i, j};
-            id++;
-        }
-    }
-
-    set<int> ew;
-    set<int> ns;
-    REP(i, H) {
-        REP(j, W) {
-            if (m[i][j] == 0) continue;
-            if (m[H - 1 - i][j] == 0) ns.insert(m[i][j]);
-            if (m[i][W - 1 - j] == 0) ew.insert(m[i][j]);
-        }
-    }
-
-    int ans = 0;
-    while (!ns.empty() || !ew.empty()) {
-        if (A > B) {
-            if (!ns.empty()) {
-                int t = *(ns.begin());
-                auto kv = mmap[t];
-                m[kv.first][kv.second] = 0;
-                ns.erase(t);
-                ew.erase(t);
-
-                if (m[kv.first][W - 1 - kv.second] > 0) {
-                    ew.insert(m[kv.first][W - 1 - kv.second]);
-                }
-            } else {
-                int t = *(ew.begin());
-                auto kv = mmap[t];
-                m[kv.first][kv.second] = 0;
-                ns.erase(t);
-                ew.erase(t);
-
-                if (m[H - 1 - kv.first][kv.second] > 0) {
-                    ns.insert(m[H - 1 - kv.first][kv.second]);
-                }
+        vector<vector<int>> m(H, vector<int>(W));
+        int total = 0;
+        REP(i, H) {
+            REP(j, W) {
+                char c;
+                cin >> c;
+                m[i][j] = c == 'S';
+                if (m[i][j]) total++;
             }
         }
-        else {
-            if (!ew.empty()) {
-                int t = *(ew.begin());
-                auto kv = mmap[t];
-                m[kv.first][kv.second] = 0;
-                ns.erase(t);
-                ew.erase(t);
 
-                if (m[H - 1 - kv.first][kv.second] > 0) {
-                    ns.insert(m[H - 1 - kv.first][kv.second]);
-                }
-            } else {
-                int t = *(ns.begin());
-                auto kv = mmap[t];
-                m[kv.first][kv.second] = 0;
-                ns.erase(t);
-                ew.erase(t);
-
-                if (m[kv.first][W - 1 - kv.second] > 0) {
-                    ew.insert(m[kv.first][W - 1 - kv.second]);
+        int all = 0;
+        int ns = 0;
+        int ew = 0;
+        REP(i, H / 2) {
+            REP(j, W / 2) {
+                int b = 0;
+                if (m[i][j]) b |= 1 << 0;
+                if (m[H - 1 - i][j]) b |= 1 << 1;
+                if (m[i][W - 1 - j]) b |= 1 << 2;
+                if (m[H - 1 - i][W - 1 - j]) b |= 1 << 3;
+                if (b == ((1 << 4) - 1)) {
+                    all++;
+                } else {
+                    if ((b & 3) == 3 || (b & 12) == 12) ns++;
+                    if ((b & 5) == 5 || (b & 10) == 10) ew++;
                 }
             }
         }
 
-        if (ns.empty()) ans += A;
-        if (ew.empty()) ans += B;
+        int res = 0;
+        {
+            int tmp = 0;
+            if (total > all * 4 + ns * 2) tmp += A;
+            tmp += A * ns;
+            if (total > all * 4) tmp += B;
+            tmp += all * (max(A, B) + A + B);
+            res = max(res, tmp);
+        }
+        {
+            int tmp = 0;
+            if (total > all * 4 + ew * 2) tmp += B;
+            tmp += B * ew;
+            if (total > all * 4) tmp += A;
+            tmp += all * (max(A, B) + A + B);
+            res = max(res, tmp);
+        }
+        cout << res << endl;
     }
-    cout << ans << endl;
-
-    return 0;
-}
-
-
+};
