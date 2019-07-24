@@ -40,7 +40,6 @@ using namespace std;
 typedef pair<int, int> P;
 
 int mod = 1e9 + 7;
-
 struct mint {
     unsigned x;
 
@@ -100,6 +99,7 @@ struct mint {
     }
 };
 
+mint dp[55][55][55 * 55 * 2];
 
 class FPermutationOddness {
 public:
@@ -108,24 +108,25 @@ public:
     static void generateTest(std::ostream& test) {
     }
 
-    void solve(std::istream& cin, std::ostream& cout) {
-        int n, k;
-        cin >> n >> k;
+    int N, K;
 
-        vector<vector<mint>> dp(n + 1, vector<mint>(n * n + 1));
-        dp[0][0] = 1;
-        REP(i, n) {
-            int v = n - i;
-            REP(m, i + 1) {
-                int d = abs((m + 1) - v);
-                d -= i - m;
-                REP(j, n * n + 1) {
-                    if (j + d < 0) continue;
-                    dp[i + 1][j + d] += dp[i][j];
+    void solve(std::istream& cin, std::ostream& cout) {
+        cin >> N >> K;
+
+        CLR(dp, 0);
+
+        dp[0][0][0] = 1;
+        REP(i, N) {
+            REP(j, i + 1) {
+                REP(k, K + 1) {
+                    dp[i + 1][j][k + 2 * j] += dp[i][j][k] * mint(2 * j + 1);
+                    dp[i + 1][j + 1][k + 2 * (j + 1)] += dp[i][j][k];
+                    if (j >= 1) {
+                        dp[i + 1][j - 1][k + 2 * (j - 1)] += dp[i][j][k] * mint(j * j);
+                    }
                 }
             }
         }
-        cout << dp[n][k].get() << endl;
-
+        cout << dp[N][0][K].get() << endl;
     }
 };
