@@ -100,23 +100,6 @@ struct mint {
     }
 };
 
-struct combination {
-    vector<mint> fact, ifact;
-
-    combination(int n) : fact(n + 1), ifact(n + 1) {
-        fact[0] = 1;
-        for (int i = 1; i <= n; ++i) fact[i] = fact[i - 1] * i;
-        ifact[n] = fact[n].inverse();
-        for (int i = n; i >= 1; --i) ifact[i - 1] = ifact[i] * i;
-    }
-
-    mint operator()(int n, int k) {
-        if (k < 0 || k > n) return 0;
-        return fact[n] * ifact[k] * ifact[n - k];
-    }
-};
-
-
 class FCoincidence {
 public:
     static constexpr int kStressIterations = 0;
@@ -124,62 +107,36 @@ public:
     static void generateTest(std::ostream& test) {
     }
 
-    mint dp[65][2][65];
+    int L, R;
 
-    mint calc(int n, combination& c) {
-        int m = -1;
-        REP(i, 62) {
-            if (n & (1LL << i)) {
-                m = max(i, m);
-            }
-        }
+    mint dp[65][2][2][2]; // dp[i][j][k][l] i:桁, j:L<=xが確定, k:y<=Rが確定, l:一番左のbitが出てきた
 
-        dp[m][0][1] = 1;
-        REV(i, m - 1, 0) {
-            REP(j, 60) {
-                if (n & (1LL << i)) {
-                    // たてる
-                    dp[i][0][j + 1] += dp[i + 1][0][j];
-                    dp[i][1][j + 1] += dp[i + 1][1][j];
-                    // たてない
-                    dp[i][0][j] += dp[i + 1][0][j];
-                    dp[i][1][j] += dp[i + 1][1][j];
-                    dp[i][1][j] += dp[i + 1][0][j];
-                } else {
-                    // たてる
-                    dp[i][1][j + 1] += dp[i + 1][1][j];
-                    // たてない
-                    dp[i][0][j] += dp[i + 1][0][j];
-                    dp[i][1][j] += dp[i + 1][1][j];
+    void solve(std::istream& cin, std::ostream& cout) {
+        cin >> L >> R;
+        CLR(dp, 0);
+
+        dp[60][0][0][0] = 1;
+        REV(i, 59, 0) {
+            REP(j, 2) {
+                REP(k, 2) {
+                    REP(l, 2) {
+                        REP(y, 2) REP(x, 2) {
+                            if (y == 0 && x == 1) continue;
+                            if (j == 0 && (L >> i & 1) && x == 0) continue;
+                            if (k == 0 && (R >> i & 1) == 0 && y == 1) continue;
+                            if (l == 0 && (x ^ y) == 1) continue;
+
+                            int nl = l || (x == 1 && y == 1);
+                            int nj = j || ((L >> i & 1) == 0 && x == 1);
+                            int nk = k || ((R >> i & 1) && y == 0);
+                            dp[i][nj][nk][nl] += dp[i + 1][j][k][l];
+                        }
+                    }
                 }
             }
         }
-
-
-        mint res = 0;
-        FOR(i, 1, 60) {
-            //DUMP(i)
-            //DUMP(dp[0][0][i].get())
-            //DUMP(dp[0][1][i].get())
-            mint tmp = 0;
-            FOR(j, 1, i) {
-                tmp += c(i, j);
-            }
-            tmp *= (dp[0][0][i] + dp[0][1][i]);
-            res += tmp;
-        }
-        return res;
-    }
-
-    void solve(std::istream& cin, std::ostream& cout) {
-        int L, R;
-        cin >> L >> R;
-        combination c(30);
-        CLR(dp, 0);
-        mint l = calc(L - 1, c);
-        CLR(dp, 0);
-        mint r = calc(R, c);
-        mint res = r - l;
-        cout << res.get() << endl;
+        mint ans = 0;
+        REP(j, 2) REP(k, 2) ans += dp[0][j][k][1];
+        cout << ans.get() << endl;
     }
 };
