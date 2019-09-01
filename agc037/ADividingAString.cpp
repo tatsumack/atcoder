@@ -39,39 +39,33 @@ using namespace std;
 
 typedef pair<int, int> P;
 
+int dp[200005][2];
+
 class ADividingAString {
 public:
     static constexpr int kStressIterations = 0;
+
     static void generateTest(std::ostream& test) {
     }
 
     void solve(std::istream& cin, std::ostream& cout) {
+        CLR(dp, 0);
+
         string s;
         cin >> s;
-        int last = s.size()-1;
-        REV(i, s.size()- 1, 1) {
-            if (s[i] != s[i-1]) {
-                break;
-            }
-            last--;
-        }
 
-        int res = 1;
-        int i = 0;
-        char prev = s[0];
-        for (i = 1; i < s.size(); i++) {
-            if (i >= last) break;
-            if (s[i] == prev) {
-                i++;
-                prev = '0';
-            }
-            res++;
-        }
-        int len = s.size() - 1 - i;
-        int k = len / 3 * 2;
-        if (k % 3 != 0) k++;
-        res += k;
-        cout << res << endl;
+        int N = s.size();
 
+        dp[0][0] = 1;
+        FOR(i, 1, N - 1) {
+            if (s[i] != s[i - 1]) {
+                dp[i][0] = dp[i - 1][0] + 1;
+            }
+            dp[i][0] = max(dp[i][0], dp[i - 1][1] + 1);
+            if (i >= 2) {
+                dp[i][1] = dp[i - 2][0] + 1;
+            }
+        }
+        cout << max(dp[N - 1][0], dp[N - 1][1]) << endl;
     }
 };
