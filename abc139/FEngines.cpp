@@ -33,7 +33,7 @@
 #define CLR(a, b) memset((a), (b), sizeof(a))
 #define DUMP(x) cout << #x << " = " << (x) << endl;
 #define INF 1001001001001001001ll
-#define fcout cout << fixed << setprecision(50)
+#define fcout cout << fixed << setprecision(48)
 
 using namespace std;
 
@@ -46,57 +46,33 @@ public:
     static void generateTest(std::ostream& test) {
     }
 
-    double calc(vector<pair<int, int>>& v) {
-        int x = 0;
-        int y = 0;
-        REP(i, v.size()) {
-            x += v[i].first;
-            y += v[i].second;
-        }
-        return sqrt(x * x + y * y);
-    }
-
     void solve(std::istream& cin, std::ostream& cout) {
         int N;
         cin >> N;
+        vector<double> x(N), y(N);
+        REP(i, N) cin >> x[i] >> y[i];
 
-        vector<pair<int , int>> RU, LU, RB, LB;
+        vector<pair<double, int>> rad;
         REP(i, N) {
-            int x, y;
-            cin >> x >> y;
-            pair<int, int> p = {x, y};
-            if (x > 0 && y > 0) {
-                RU.push_back(p);
-            } else if (x < 0 && y > 0) {
-                LU.push_back(p);
-            } else if (x > 0 && y < 0) {
-                RB.push_back(p);
-            } else if (x < 0 && y < 0) {
-                LB.push_back(p);
-            } else if (x == 0) {
-                if (y > 0) {
-                    RU.push_back(p);
-                    LU.push_back(p);
-                } else {
-                    RB.push_back(p);
-                    LB.push_back(p);
-                }
-            } else if (y == 0) {
-                if (x > 0) {
-                    RU.push_back(p);
-                    RB.push_back(p);
-                } else {
-                    LU.push_back(p);
-                    LB.push_back(p);
-                }
-            }
+            rad.emplace_back(atan2(x[i], y[i]), i);
+            rad.emplace_back(atan2(x[i], y[i]) + 2 * M_PI, i);
         }
+        sort(rad.begin(), rad.end());
 
         double res = 0;
-        res = max(res, calc(RU));
-        res = max(res, calc(LU));
-        res = max(res, calc(RB));
-        res = max(res, calc(LB));
+        REP(l, N) {
+            FOR(r, l, 2 * N - 1) {
+                if (r >= l + N) continue;
+                double px = 0;
+                double py = 0;
+                FOR(i, l, r) {
+                    auto kv = rad[i];
+                    px += x[kv.second];
+                    py += y[kv.second];
+                }
+                res = max(sqrt(px * px + py * py), res);
+            }
+        }
         fcout << res << endl;
     }
 };
