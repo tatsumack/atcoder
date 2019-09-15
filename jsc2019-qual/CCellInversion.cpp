@@ -38,7 +38,8 @@
 using namespace std;
 
 typedef pair<int, int> P;
-nt mod = 1e9 + 7;
+
+int mod = 1e9 + 7;
 
 struct mint {
     unsigned x;
@@ -98,14 +99,51 @@ struct mint {
         return t;
     }
 };
+
 class CCellInversion {
 public:
     static constexpr int kStressIterations = 0;
+
     static void generateTest(std::ostream& test) {
     }
 
     void solve(std::istream& cin, std::ostream& cout) {
         int N;
+        cin >> N;
+        string s;
+        cin >> s;
 
+        if (s[0] == 'W') {
+            cout << 0 << endl;
+            return;
+        }
+
+        mint res = 1;
+        int left = 1;
+        FOR(i, 1, s.size() - 1) {
+            char c = s[i];
+            if (c == 'W') {
+                if (left % 2 == 0) {
+                    res *= left;
+                    left--;
+                } else {
+                    left++;
+                }
+            }
+            if (c == 'B') {
+                if (left % 2 == 1) {
+                    res *= left;
+                    left--;
+                } else {
+                    left++;
+                }
+            }
+        }
+        if (left != 0) {
+            cout << 0 << endl;
+            return;
+        }
+        FOR(i, 1, N) res *= i;
+        cout << res.get() << endl;
     }
 };
