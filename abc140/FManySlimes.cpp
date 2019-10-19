@@ -42,28 +42,36 @@ typedef pair<int, int> P;
 class FManySlimes {
 public:
     static constexpr int kStressIterations = 0;
-
     static void generateTest(std::ostream& test) {
     }
 
     void solve(std::istream& cin, std::ostream& cout) {
-        int N;
-        cin >> N;
-        vector<int> s(1 << N);
-        REP(i, 1 << N) cin >> s[i];
+        int n;
+        cin >> n;
+        vector<int> s(1 << n);
+        REP(i, 1 << n) cin >> s[i];
         sort(s.begin(), s.end());
 
-        int cur = 0;
-        int prev = 0;
-        REV(i, N, 1) {
-            cur = prev + (1 << (i - 1));
-            for (int j = 0; prev + j < cur; j++) {
-                if (s[prev + j] >= s[cur + j]) {
+        multiset<int> ms;
+        REP(i, (1 << n) - 1) ms.insert(s[i]);
+
+        vector<int> cur;
+        cur.push_back(s.back());
+        REP(i, n) {
+            vector<int> next = cur;
+            for (int t: cur) {
+                auto itr = ms.lower_bound(t);
+                if (itr == ms.begin()) {
                     cout << "No" << endl;
                     return;
                 }
+                itr--;
+                next.push_back(*itr);
+                ms.erase(itr);
             }
-            prev = cur;
+
+            sort(next.rbegin(), next.rend());
+            swap(cur, next);
         }
         cout << "Yes" << endl;
     }
