@@ -39,7 +39,7 @@ using namespace std;
 
 typedef pair<int, int> P;
 
-class SegmentMap : public std::map<signed, signed> {
+class SegmentMap : public std::map<int, int> {
 private:
     bool flagToMergeAdjacentSegment;
 public:
@@ -49,14 +49,14 @@ public:
 
     // __exist -> iterator pair(l, r) (contain p)
     // noexist -> map.end()
-    auto get(signed p) const {
+    auto get(int p) const {
         auto it = upper_bound(p);
         if (it == begin() || (--it)->second < p) return end();
         return it;
     }
 
     // insert segment [l, r]
-    void insert(signed l, signed r) {
+    void insert(int l, int r) {
         auto itl = upper_bound(l), itr = upper_bound(r + flagToMergeAdjacentSegment);
         if (itl != begin()) {
             if ((--itl)->second < l - flagToMergeAdjacentSegment) ++itl;
@@ -70,7 +70,7 @@ public:
     }
 
     // remove segment [l, r]
-    void remove(signed l, signed r) {
+    void remove(int l, int r) {
         auto itl = upper_bound(l), itr = upper_bound(r);
         if (itl != begin()) {
             if ((--itl)->second < l) ++itl;
@@ -83,7 +83,7 @@ public:
     }
 
     // Is p and q in same segment?
-    bool same(signed p, signed q) const {
+    bool same(int p, int q) const {
         const auto&& it = get(p);
         return it != end() && it->first <= q && q <= it->second;
     }
@@ -92,7 +92,6 @@ public:
 class FSumDifference {
 public:
     static constexpr int kStressIterations = 0;
-
     static void generateTest(std::ostream& test) {
     }
 
