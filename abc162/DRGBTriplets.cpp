@@ -20,31 +20,41 @@ public:
         cin >> N;
         string s;
         cin >> s;
-        vector<vector<int>> left(N, vector<int>(3));
-        vector<vector<int>> right(N, vector<int>(3));
-        map<char, int> m;
-        m['R'] = 0;
-        m['G'] = 1;
-        m['B'] = 2;
-        FOR(i, 1, s.size() - 1) {
-            char c = s[i - 1];
-            REP(j, 3) {
-                left[i][j] = left[i-1][j];
-            }
-            left[i][m[c]]++;
+        vector<int> LR(N), LG(N), LB(N), RR(N), RG(N), RB(N);
+        for (int i = 1; i < N; i++) {
+            LR[i] = LR[i - 1] + (s[i - 1] == 'R');
+            LG[i] = LG[i - 1] + (s[i - 1] == 'G');
+            LB[i] = LB[i - 1] + (s[i - 1] == 'B');
         }
-        REV(i, s.size() - 2, 0) {
-            char c = s[i + 1];
-            REP(j, 3) {
-                right[i][j] = right[i+1][j];
-            }
-            right[i][m[c]]++;
+        for (int i = N - 2; i >= 0; i--) {
+            RR[i] = RR[i + 1] + (s[i + 1] == 'R');
+            RG[i] = RG[i + 1] + (s[i + 1] == 'G');
+            RB[i] = RB[i + 1] + (s[i + 1] == 'B');
         }
-
         int res = 0;
-        REP(i, s.size()) {
-
+        for (int i = 1; i < N - 1; i++) {
+            if (s[i] == 'R') {
+                res += LG[i] * RB[i] + LB[i] * RG[i];
+                for (int j = 1; i - j >= 0 && i + j < N; j++) {
+                    if ((s[i - j] == 'G' && s[i + j] == 'B')) res--;
+                    if ((s[i - j] == 'B' && s[i + j] == 'G')) res--;
+                }
+            }
+            if (s[i] == 'G') {
+                res += LR[i] * RB[i] + LB[i] * RR[i];
+                for (int j = 1; i - j >= 0 && i + j < N; j++) {
+                    if ((s[i - j] == 'R' && s[i + j] == 'B')) res--;
+                    if ((s[i - j] == 'B' && s[i + j] == 'R')) res--;
+                }
+            }
+            if (s[i] == 'B') {
+                res += LR[i] * RG[i] + LG[i] * RR[i];
+                for (int j = 1; i - j >= 0 && i + j < N; j++) {
+                    if ((s[i - j] == 'R' && s[i + j] == 'G')) res--;
+                    if ((s[i - j] == 'G' && s[i + j] == 'R')) res--;
+                }
+            }
         }
-
+        cout << res << endl;
     }
 };
