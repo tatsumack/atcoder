@@ -12,8 +12,9 @@
 using namespace std;
 
 typedef pair<int, int> P;
+
 // mod
-int mod = 1e9 + 7;
+const int mod = 1e9 + 7;
 
 struct mint {
     unsigned x;
@@ -74,6 +75,25 @@ struct mint {
     }
 };
 
+struct combination {
+    vector<mint> fact, ifact;
+
+    combination(int n) : fact(n + 1), ifact(n + 1) {
+        fact[0] = 1;
+        for (int i = 1; i <= n; ++i) fact[i] = fact[i - 1] * i;
+        ifact[n] = fact[n].inverse();
+        for (int i = n; i >= 1; --i) ifact[i - 1] = ifact[i] * i;
+    }
+
+    mint operator()(int n, int k) {
+        if (n >= fact.size()) {
+            cout << n << endl;
+        }
+        if (k < 0 || k > n) return 0;
+        return fact[n] * ifact[k] * ifact[n - k];
+    }
+};
+
 class FStrivore {
 public:
     void solve(std::istream& cin, std::ostream& cout) {
@@ -82,25 +102,18 @@ public:
         string s;
         cin >> s;
 
-        int N = s.size();
-        vector<mint> cnt(26, 1);
-        REP(i, N) {
-            char a = s[i];
-            REP(j, 26) {
-                char c = 'a' + j;
-                if (c == a) continue;
-                if (i > 0 && c == s[i - 1]) continue;
-                cnt[c - 'a'] += 1;
-            }
-        }
+        int n = s.size();
+        combination cb(K + n + 5);
 
-        mint res = 1;
-        REP(i, K) {
-            REP(j, 26) {
-                res *= cnt[j];
-            }
+        vector<mint> twentyfive(K + 1), twentysix(K + 1);
+        twentyfive[0] = 1;
+        twentysix[0] = 1;
+        REP(i, K) twentyfive[i + 1] = twentyfive[i] * 25;
+        REP(i, K) twentysix[i + 1] = twentysix[i] * 26;
+        mint res = 0;
+        FOR(i, 0, K) {
+            res += cb(i + n - 1, n - 1) * twentyfive[i] * twentysix[K - i];
         }
         cout << res.get() << endl;
-
     }
 };
