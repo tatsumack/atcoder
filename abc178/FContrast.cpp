@@ -18,45 +18,46 @@ public:
     void solve(std::istream& cin, std::ostream& cout) {
         int N;
         cin >> N;
-        vector<int> A(N), B(N);
-        REP(i, N) cin >> A[i] >> B[i];
-        map<int, int> cnt;
+        vector<int> A(N), B(N), CA(N+1), CB(N+1);
         REP(i, N) {
-            if (A[i] == B[i]) cnt[A[i]]++;
+            cin >> A[i];
+            CA[A[i]]++;
         }
-
-        int num = 0;
-        vector<pair<int, int>> v;
-        for (auto kv: cnt) {
-            num = max(num, kv.second);
-            v.push_back({-kv.second, kv.first});
+        REP(i, N) {
+            cin >> B[i];
+            CB[B[i]]++;
         }
-        if (num >= N / 2 + 1) {
-            cout << "No" << endl;
-            return;
-        }
-
-        sort(v.begin(), v.end());
-        auto t = v;
-        map<int, vector<pair<int, int>>> m;
-        int j = 1;
-        REP(i, N) v[i].first *= -1;
-        REP(i, N) t[i].first *= -1;
-        REP(i, v.size()) {
-            while (v[i].first > 0 && j < v.size()) {
-                if (v[i].first >= t[j].first) {
-                    m[t[j].second].push_back({v[i].second, t[j].first});
-                    v[i].first -= t[j].first;
-                    j++;
-                } else {
-                    m[t[j].second].push_back({v[i].second, v[i].first});
-                    v[i].first = 0;
-                    t[j].first -= v[i].first;
-                }
+        FOR(i, 1, N) {
+            if (CA[i] + CB[i] > N) {
+                cout << "No" << endl;
+                return;
             }
         }
 
+        cout << "Yes" << endl;
+        sort(B.rbegin(), B.rend());
 
-
+        int x = -1;
+        int p = -1;
+        REP(i, N) {
+            if (A[i] == B[i]) {
+                x = A[i];
+                p = i;
+                break;
+            }
+        }
+        if (x == -1) {
+            REP(i, N) cout << B[i] << " ";
+            return;
+        }
+        REP(i, N) {
+            if (A[i] != x && B[i] != x) {
+                swap(B[i], B[p]);
+                p++;
+                if (p >= N) break;
+                if (A[p] != x || B[p] != x) break;
+            }
+        }
+        REP(i, N) cout << B[i] << " ";
     }
 };
