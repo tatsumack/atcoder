@@ -11,8 +11,6 @@
 
 using namespace std;
 
-typedef pair<int, int> P;
-
 class FBracketSequencing {
 public:
     void solve(std::istream& cin, std::ostream& cout) {
@@ -20,51 +18,67 @@ public:
         cin >> N;
         vector<string> S(N);
         REP(i, N) cin >> S[i];
-
-        int lo = 0;
-        int ro = 0;
-        vector<pair<int, int>> v;
-        for (auto& s : S) {
-            int cl = 0;
-            int cr = 0;
-            for (auto c : s) {
+        vector<tuple<int,int>> f;
+        vector<tuple<int, int, int>> s;
+        REP(i, N) {
+            int sum = 0;
+            int m = 0;
+            for (auto c :S[i]) {
                 if (c == '(') {
-                    cl++;
+                    sum++;
                 } else {
-                    if (cl > 0) {
-                        cl--;
-                    } else {
-                        cr++;
-                    }
+                    sum--;
                 }
+                m = min(m, sum);
             }
-            if (cr == 0) {
-                lo += cl;
-            } else if (cl == 0) {
-                ro += cr;
-            } else {
-                v.emplace_back(cr, -cl);
+            if (sum > 0) {
+                f.push_back({m, sum});
+                continue;
             }
+            int sum2 = 0;
+            int m2 = 0;
+            for (int j = S[i].size() - 1; j >= 0; j--) {
+                char c = S[i][j];
+                if (c == '(') {
+                    sum2--;
+                } else {
+                    sum2++;
+                }
+                m2 = min(m2, sum2);
+            }
+            s.push_back({m2, m, sum});
         }
 
-        int cl = lo;
-        sort(v.begin(), v.end());
-        for (auto kv : v) {
-            int r, l;
-            tie(r, l) = kv;
-            l *= -1;
-            if (cl < r) {
-                cout << "No" << endl;
-                return;
+        sort(f.rbegin(), f.rend());
+        sort(s.begin(), s.end());
+        bool ok = true;
+        int cur = 0;
+        for (auto val : f) {
+            int m, s;
+            tie(m, s) = val;
+            if (cur + m < 0) {
+                ok = false;
+                break;
             }
-            cl -= r;
-            cl += l;
+            cur += s;
         }
-
-        if (cl == ro) {
-            cout << "Yes" << endl;
-        } else {
+        if (!ok) {
             cout << "No" << endl;
+            return;
         }
+        for (auto val : s) {
+            int m2, m, s;
+            tie(m2, m, s) = val;
+            if (cur + m < 0) {
+                ok = false;
+                break;
+            }
+            cur += s;
+        }
+        if (!ok || cur != 0) {
+            cout << "No" << endl;
+            return;
+        }
+        cout << "Yes" << endl;
     }
 };
