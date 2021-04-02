@@ -13,34 +13,30 @@ using namespace std;
 
 class CLargeRPSTournament {
 public:
-
-    int n, k;
-    char calc(string& s, int l, int r) {
-        if (r - l <= 1) {
-            return s[l % n];
-        }
-        int m = (l + r) / 2;
-        char cl = calc(s, l, m);
-        char cr = calc(s, m, r);
-        if (cl == cr) return cl;
-        if (cl == 'R' && cr == 'S') return 'R';
-        if (cl == 'R' && cr == 'P') return 'P';
-        if (cl == 'S' && cr == 'R') return 'R';
-        if (cl == 'S' && cr == 'P') return 'S';
-        if (cl == 'P' && cr == 'R') return 'P';
-        if (cl == 'P' && cr == 'S') return 'S';
-        return '#';
-    }
-
     void solve(std::istream& cin, std::ostream& cout) {
+        int n, k;
         cin >> n >> k;
         string s;
         cin >> s;
-
-        if (k <= 10) {
-            cout << calc(s, 0, pow(2, k)) << endl;
-            return;
+        map<char, map<char, int>> m;
+        m['R']['R'] = 0;
+        m['R']['P'] = 1;
+        m['R']['S'] = 0;
+        m['P']['R'] = 0;
+        m['P']['P'] = 0;
+        m['P']['S'] = 1;
+        m['S']['R'] = 1;
+        m['S']['P'] = 0;
+        m['S']['S'] = 0;
+        while (k--) {
+            string next = "";
+            s += s;
+            for (int i = 0; i < s.size(); i += 2) {
+                int ni = m[s[i]][s[i + 1]] + i;
+                next += s[ni];
+            }
+            swap(next, s);
         }
-        cout << calc(s, 0, 128) << endl;
+        cout << s[0] << endl;
     }
 };
