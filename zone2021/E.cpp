@@ -18,15 +18,63 @@ public:
         int R, C;
         cin >> R >> C;
         vector<vector<int>> A(R, vector<int>(C - 1));
-        vector<vector<int>> B(R, vector<int>(C - 1));
+        vector<vector<int>> B(R - 1, vector<int>(C));
         REP(i, R) REP(j, C - 1) cin >> A[i][j];
-        REP(i, R) REP(j, C - 1) cin >> B[i][j];
+        REP(i, R - 1) REP(j, C) cin >> B[i][j];
 
-        vector<int> dist(R * C);
+        vector<int> dist(R * C * 2, INF);
         dist[0] = 0;
         priority_queue<P, vector<P>, greater<>> pq;
         pq.push({0, 0});
         while (!pq.empty()) {
+            int cost, v;
+            tie(cost, v) = pq.top();
+            pq.pop();
+            //cout << v << ":" << cost << endl;
+            int x = v % R;
+            int y = v / R;
+            if (v >= R * C) {
+                if (x - 1 >= 0) {
+                    int nv = R * y + x - 1;
+                    if (cost + 1 < dist[nv]) {
+                        dist[nv] = cost;
+                        pq.push({cost + 1, nv});
+                    }
+                }
+                int nv = v - R * C;
+                if (cost < dist[nv]) {
+                    dist[nv] = cost;
+                    pq.push({cost, nv});
+                }
+            } else {
+                int nv = v + R * C;
+                if (cost + 1 < dist[nv]) {
+                    dist[nv] = cost + 1;
+                    pq.push({cost + 1, nv});
+                }
+                if (y + 1 <= C - 1) {
+                    nv = R * (y + 1) + x;
+                    if (cost + A[x][y] < dist[nv]) {
+                        dist[nv] = cost + A[x][y];
+                        pq.push({cost + A[x][y], nv});
+                    }
+                }
+                if (y - 1 >= 0) {
+                    nv = R * (y - 1) + x;
+                    if (cost + A[x][y - 1] < dist[nv]) {
+                        dist[nv] = cost + A[x][y - 1];
+                        pq.push({cost + A[x][y - 1], nv});
+                    }
+                }
+                if (x + 1 <= R - 1) {
+                    nv = R * y + x + 1;
+                    if (cost + B[x][y] < dist[nv]) {
+                        dist[nv] = cost + B[x][y];
+                        pq.push({cost + B[x][y], nv});
+                    }
+                }
+            }
         }
+        cout << dist[R * C - 1] << endl;
     }
 };
