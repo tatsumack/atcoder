@@ -16,32 +16,47 @@ public:
     void solve(std::istream& cin, std::ostream& cout) {
         int N, K;
         cin >> N >> K;
-        int cur = 0;
-        int t;
-        FOR(i, 3, 3 * N) {
-            int num = (i - 1) * (i - 2) / 2;
-            if (K <= cur + num) {
-                t = i;
-                K -= cur;
+        vector<vector<int>> dp(4, vector<int>(4 * N + 10));
+        dp[0][0] = 1;
+        REP(i, 3) {
+            REP(j, 3 * N) {
+                dp[i + 1][j + 1] += dp[i][j];
+                dp[i + 1][j + N + 1] -= dp[i][j];
+            }
+            REP(j, 3 * N) {
+                dp[i + 1][j + 1] += dp[i + 1][j];
+            }
+        }
+
+        int x = -1;
+        REP(j, 3 * N + 1) {
+            if (K - dp[3][j] <= 0) {
+                x = j;
                 break;
             }
-            cur += num;
+            K -= dp[3][j];
         }
-        int a;
-        cur = 0;
-        FOR(i, 1, min(t - 2, N)) {
-            if (t - i > N * 2) continue;
-            int num = (t - i - 1);
-            if (K <= cur + num) {
-                a = i;
-                K -= cur;
+        int y = -1;
+        FOR(j, 1, N) {
+            int r = x - j;
+            if (r > 2 * N) continue;
+            if (K - dp[2][r] <= 0) {
+                y = j;
                 break;
             }
-            cur += num;
+            K -= dp[2][r];
         }
-        int b = K;
-        int c = t - (a + b);
-        cout << t << endl;
-        cout << a << " " << b << " " << c << endl;
+        int z = -1;
+        FOR(j, 1, N) {
+            int r = x - y - j;
+            if (r > N) continue;
+            if (K - dp[1][r] <= 0) {
+                z = j;
+                break;
+            }
+            K -= dp[1][r];
+        }
+
+        cout << y << " " << z << " " << x - (y + z) << endl;
     }
 };
